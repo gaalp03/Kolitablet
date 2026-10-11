@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T16:35:03+02:00",
+  "updated": "2026-10-11T17:36:56+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -24,7 +24,7 @@
     "high": 17,
     "low": 13,
     "precip_chance": 0,
-    "wind_kmh": 12,
+    "wind_kmh": 9,
     "forecast": [
       {
         "day": "Holnap",
@@ -35,8 +35,8 @@
       {
         "day": "Kedd",
         "icon": "sun",
-        "high": 16,
-        "low": 8
+        "high": 17,
+        "low": 9
       },
       {
         "day": "Szerda",
