@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T16:25:55+02:00",
+  "updated": "2026-10-11T16:31:24+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -12,7 +12,7 @@
   },
   "briefing": {
     "morning": "Budapesten 17 fok és részben felhős idő van, az éjszakai eső elállt. A Tippmix szerint október 13-ig nincs jó meccs, kedd reggel jön az új elemzés.",
-    "evening": "Estére száraz, nyugodt idő marad, holnap felhős lesz 16 fok körül. A Tippmix kedd reggel elemez újra, a többi bottól még nincs friss jelentés."
+    "evening": "Estére száraz, nyugodt idő marad. Holnap két dolgozat jön, hangkultúra és magyar, ma este érdemes átismételni őket."
   },
   "weather": {
     "location": "Budapest",
@@ -26,9 +26,24 @@
     "precip_chance": 0,
     "wind_kmh": 12,
     "forecast": [
-      { "day": "Holnap", "icon": "cloud", "high": 16, "low": 12 },
-      { "day": "Kedd", "icon": "sun", "high": 16, "low": 8 },
-      { "day": "Szerda", "icon": "rain", "high": 14, "low": 5 }
+      {
+        "day": "Holnap",
+        "icon": "cloud",
+        "high": 16,
+        "low": 12
+      },
+      {
+        "day": "Kedd",
+        "icon": "sun",
+        "high": 16,
+        "low": 8
+      },
+      {
+        "day": "Szerda",
+        "icon": "rain",
+        "high": 14,
+        "low": 5
+      }
     ]
   },
   "bots": [
@@ -39,8 +54,8 @@
       "icon": "grok",
       "status": "ok",
       "value": "Élő",
-      "line": "Elindult a fali kijelző, mostantól reggel és este frissítem az adatokat.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "line": "Megkérdeztem a botokat, a kijelző friss adatokkal megy.",
+      "updated": "2026-10-11T16:31:24+02:00"
     },
     {
       "id": "tippmix",
@@ -57,10 +72,10 @@
       "name": "CrazyGames Stats",
       "subtitle": "Játékok számai",
       "icon": "games",
-      "status": "idle",
-      "value": "–",
-      "line": "Nincs friss jelentés.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "status": "warn",
+      "value": "5/15",
+      "line": "Phantom Crew és One More Vault asztalin 5/15, 9 kell. Ma este új buildek.",
+      "updated": "2026-10-11T16:31:24+02:00"
     },
     {
       "id": "promo",
@@ -68,40 +83,49 @@
       "subtitle": "TikTok · Instagram",
       "icon": "promo",
       "status": "idle",
-      "value": "–",
-      "line": "Nincs friss jelentés.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "value": "Szünetel",
+      "line": "A promó áll a javított buildekig, az IndieDB-oldalak élnek.",
+      "updated": "2026-10-11T16:31:24+02:00"
     },
     {
       "id": "tanulas",
       "name": "Tanulás",
       "subtitle": "Napi tanulás",
       "icon": "learn",
-      "status": "idle",
-      "value": "–",
-      "line": "Nincs friss jelentés.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "status": "warn",
+      "value": "2 dolgozat",
+      "line": "Ma: készülés a holnapi hangkultúra témazáróra és magyar röpire.",
+      "updated": "2026-10-11T16:31:24+02:00"
     },
     {
       "id": "eladas",
       "name": "Eladás",
       "subtitle": "Hirdetések",
       "icon": "sell",
-      "status": "idle",
-      "value": "–",
-      "line": "Nincs friss jelentés.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "status": "ok",
+      "value": "3 hirdetés",
+      "line": "Sony kamera Vinted+Jófogás, varrógép Jófogás; minicross eladva.",
+      "updated": "2026-10-11T16:31:24+02:00"
     },
     {
       "id": "vasarlas",
       "name": "Vásárlás",
       "subtitle": "Figyelt termékek",
       "icon": "buy",
-      "status": "idle",
+      "status": "ok",
       "value": "–",
-      "line": "Nincs friss jelentés.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "line": "Nincs leadott rendelés vagy figyelt csomag.",
+      "updated": "2026-10-11T16:31:24+02:00"
     }
   ],
-  "todos": []
+  "todos": [
+    {
+      "text": "Hangkultúra témazáró ismétlés (holnap 3. óra)",
+      "priority": "high"
+    },
+    {
+      "text": "Magyar röpdolgozat ismétlés: Janus Pannonius, Balassi (holnap 1. óra)",
+      "priority": "high"
+    }
+  ]
 }
