@@ -83,7 +83,7 @@
       "subtitle": "TikTok · Instagram",
       "icon": "promo",
       "status": "idle",
-      "value": "Szünetel",
+      "value": "–",
       "line": "Áll a javított buildekig.",
       "updated": "2026-10-11T16:35:03+02:00"
     },
@@ -93,7 +93,7 @@
       "subtitle": "Napi tanulás",
       "icon": "learn",
       "status": "warn",
-      "value": "2 dolgozat",
+      "value": "2",
       "line": "Hangkultúra + magyar holnap.",
       "updated": "2026-10-11T16:35:03+02:00"
     },
@@ -103,7 +103,7 @@
       "subtitle": "Hirdetések",
       "icon": "sell",
       "status": "ok",
-      "value": "3 hirdetés",
+      "value": "3",
       "line": "Kamera, varrógép; cross eladva.",
       "updated": "2026-10-11T16:35:03+02:00"
     },
