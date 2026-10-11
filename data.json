@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T17:36:56+02:00",
+  "updated": "2026-10-11T21:04:36+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -54,8 +54,8 @@
       "icon": "grok",
       "status": "ok",
       "value": "Élő",
-      "line": "Minden bot jelentett.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "A kijelző reggel és este frissül.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "tippmix",
@@ -64,8 +64,8 @@
       "icon": "tippmix",
       "status": "info",
       "value": "0 tipp",
-      "line": "Kedd reggelig nincs jó meccs.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "Keddig nincs biztos meccs, nem fogadunk.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "crazygames",
@@ -74,8 +74,8 @@
       "icon": "games",
       "status": "warn",
       "value": "5/15",
-      "line": "Asztalin 5/15, 9 kell.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "Mindkét játék pontszáma 5/15, 9 kellene.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "promo",
@@ -84,8 +84,8 @@
       "icon": "promo",
       "status": "idle",
       "value": "–",
-      "line": "Áll a javított buildekig.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "Szünetel, amíg ki nem jön a javított játék.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "tanulas",
@@ -94,8 +94,8 @@
       "icon": "learn",
       "status": "warn",
       "value": "2",
-      "line": "Hangkultúra + magyar holnap.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "Holnap hangkultúra és magyar dolgozat.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "eladas",
@@ -104,8 +104,8 @@
       "icon": "sell",
       "status": "ok",
       "value": "3",
-      "line": "Kamera, varrógép; cross eladva.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "3 hirdetés fent, nincs új infó.",
+      "updated": "2026-10-11T21:04:36+02:00"
     },
     {
       "id": "vasarlas",
@@ -114,8 +114,8 @@
       "icon": "buy",
       "status": "ok",
       "value": "–",
-      "line": "Nincs csomag.",
-      "updated": "2026-10-11T16:35:03+02:00"
+      "line": "Nincs rendelés, semmi új infó.",
+      "updated": "2026-10-11T21:04:36+02:00"
     }
   ],
   "todos": [
