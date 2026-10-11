@@ -3,14 +3,15 @@
   "settings": {
     "name": "Péter",
     "refreshMinutes": 5,
-    "autoRead": { "enabled": true, "morning": "07:30", "evening": "21:30" },
-    "speechRate": 1.0,
-    "night": { "start": "23:00", "end": "06:00" },
+    "night": {
+      "start": "23:00",
+      "end": "06:00"
+    },
     "shiftMinutes": 3
   },
   "briefing": {
-    "morning": "Ma délelőtt statisztika előadás, a Tippmix elemzés elkészült, és 3 új promóciót találtam.",
-    "evening": "Jó nap volt: a legtöbb teendő kész, holnapra esőt mondanak, vigyél esernyőt."
+    "morning": "Nyugodt nap: 10-kor statisztika előadás, délután csomag a portán. A Tippmix elemzés kész, a Promó Figyelő 3 új promót talált.",
+    "evening": "A legtöbb teendő kész, estére a matek ismétlés maradt. Holnap esőt mondanak, reggel vigyél esernyőt."
   },
   "weather": {
     "location": "Budapest",
@@ -22,11 +23,25 @@
     "low": 9,
     "precip_chance": 20,
     "wind_kmh": 12,
-    "humidity": 64,
     "forecast": [
-      { "day": "Holnap", "icon": "rain", "condition": "esős", "high": 15, "low": 8 },
-      { "day": "Kedd", "icon": "cloud", "condition": "borult", "high": 13, "low": 7 },
-      { "day": "Szerda", "icon": "sun", "condition": "napos", "high": 17, "low": 6 }
+      {
+        "day": "Holnap",
+        "icon": "rain",
+        "high": 15,
+        "low": 8
+      },
+      {
+        "day": "Kedd",
+        "icon": "cloud",
+        "high": 13,
+        "low": 7
+      },
+      {
+        "day": "Szerda",
+        "icon": "sun",
+        "high": 17,
+        "low": 6
+      }
     ]
   },
   "bots": [
@@ -36,8 +51,8 @@
       "subtitle": "Napi összefoglaló",
       "icon": "grok",
       "status": "ok",
-      "value": "Kész",
-      "line": "Elkészült a mai összefoglaló: 5 hír, 2 kiemelt téma.",
+      "value": "5 hír",
+      "line": "Kész a mai összefoglaló: 2 kiemelt téma, minden bot jelentett reggel 7 előtt.",
       "updated": "2026-10-11T06:30:00+02:00"
     },
     {
@@ -47,7 +62,7 @@
       "icon": "tippmix",
       "status": "ok",
       "value": "6 tipp",
-      "line": "Hétfő–kedd elemzés kész, legjobb szorzó 2,35.",
+      "line": "Hétfő–kedd elemzés kész, legjobb szorzó 2,35; a részletek a chatben.",
       "updated": "2026-10-11T06:00:00+02:00"
     },
     {
@@ -57,7 +72,7 @@
       "icon": "games",
       "status": "ok",
       "value": "12 480",
-      "line": "Tegnapi játékmenet, +8% az előző naphoz képest.",
+      "line": "Tegnapi játékmenetek, +8% az előző naphoz képest; 1 játék Basic Launch-ban.",
       "updated": "2026-10-11T05:00:00+02:00"
     },
     {
@@ -67,7 +82,7 @@
       "icon": "promo",
       "status": "warn",
       "value": "3 új",
-      "line": "3 új promóció, 1 ma 20:00-kor lejár.",
+      "line": "3 új promóció TikTokon, az egyik ma 20:00-kor lejár – érdemes ránézni.",
       "updated": "2026-10-11T06:55:00+02:00"
     },
     {
@@ -77,7 +92,7 @@
       "icon": "learn",
       "status": "running",
       "value": "45 perc",
-      "line": "Ma: angol szókártyák és statisztika jegyzet.",
+      "line": "Holnap matek dolgozat: ma este 1 óra ismétlés, utána angol szókártyák.",
       "updated": "2026-10-11T07:00:00+02:00"
     },
     {
@@ -87,7 +102,7 @@
       "icon": "sell",
       "status": "ok",
       "value": "2 aktív",
-      "line": "1 új üzenet egy érdeklődőtől.",
+      "line": "2 aktív hirdetés, 1 új üzenet egy érdeklődőtől a monitor miatt.",
       "updated": "2026-10-11T06:40:00+02:00"
     },
     {
@@ -97,16 +112,37 @@
       "icon": "buy",
       "status": "idle",
       "value": "–",
-      "line": "Nincs árváltozás a figyelt termékeknél.",
+      "line": "Bevásárlólista: tej, kenyér, tojás; a rendelt csomag holnap érkezik.",
       "updated": "2026-10-10T22:00:00+02:00"
     }
   ],
   "todos": [
-    { "time": "08:30", "text": "Reggeli edzés", "done": true },
-    { "time": "10:00", "text": "Statisztika előadás – B épület", "priority": "high" },
-    { "time": "14:00", "text": "Csomag átvétele a portán", "kind": "reminder" },
-    { "time": "19:00", "text": "Tippmix szelvény ellenőrzése" },
-    { "text": "Mosás" },
-    { "time": "22:30", "text": "Telefon töltőre", "kind": "reminder" }
+    {
+      "time": "08:30",
+      "text": "Reggeli edzés",
+      "done": true
+    },
+    {
+      "time": "10:00",
+      "text": "Statisztika előadás – B épület",
+      "priority": "high"
+    },
+    {
+      "time": "14:00",
+      "text": "Csomag átvétele a portán",
+      "kind": "reminder"
+    },
+    {
+      "time": "19:00",
+      "text": "Matek ismétlés (holnap dolgozat)"
+    },
+    {
+      "text": "Mosás a koliban"
+    },
+    {
+      "time": "22:30",
+      "text": "Telefon töltőre",
+      "kind": "reminder"
+    }
   ]
 }

@@ -2,240 +2,204 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#05080f">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#070b14">
 <title>Koli Jarvis</title>
 <link rel="icon" href="data:,">
 <style>
   :root {
-    --bg: #05080f;
-    --card: rgba(13, 20, 36, 0.74);
-    --card-border: rgba(125, 180, 255, 0.13);
-    --text: #e9f2ff;
-    --muted: #93a7c6;
-    --dim: #61728f;
-    --accent: #4cc9ff;
-    --accent-2: #8a7dff;
-    --ok: #38d996;
-    --warn: #ffb547;
-    --err: #ff5d6c;
-    --run: #4cc9ff;
-    --idle: #6b7a93;
-    --radius: 1.2rem;
+    --bg: #070b14;
+    --card: rgba(255, 255, 255, 0.055);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --text: #eef2ff;
+    --soft: #cdd6f0;
+    --muted: #93a0bd;
+    --dim: #64748b;
+    --accent: #5eead4;
+    --accent-2: #818cf8;
+    --ok: #4ade80;
+    --info: #60a5fa;
+    --warn: #fbbf24;
+    --err: #f87171;
+    --idle: #64748b;
+    --radius: 1.3rem;
   }
 
   /* 1 rem = 16px 1280×800-on, 24px 1920×1200-on – minden arányosan skálázódik */
   html { font-size: min(1.25vw, 2vh); }
   html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); }
   body {
-    font-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-family: "Inter", "Roboto", "Noto Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-select: none;
   }
-  button { font: inherit; color: inherit; }
   svg { display: block; }
 
-  /* ---------- Animált háttér ---------- */
+  /* ---------- Lassan mozgó színes háttér ---------- */
   .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
-  .blob {
-    position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%;
-    will-change: transform; opacity: 0.9;
-  }
-  .blob.b1 { left: -25vmax; top: -30vmax; background: radial-gradient(circle, rgba(56, 160, 255, 0.20), transparent 62%); animation: drift1 70s ease-in-out infinite alternate; }
-  .blob.b2 { right: -30vmax; bottom: -35vmax; background: radial-gradient(circle, rgba(124, 92, 255, 0.17), transparent 62%); animation: drift2 90s ease-in-out infinite alternate; }
-  .blob.b3 { left: 30vw; top: 20vh; width: 50vmax; height: 50vmax; background: radial-gradient(circle, rgba(0, 220, 200, 0.08), transparent 60%); animation: drift3 110s ease-in-out infinite alternate; }
-  @keyframes drift1 { to { transform: translate(18vw, 22vh) scale(1.15); } }
-  @keyframes drift2 { to { transform: translate(-22vw, -18vh) scale(1.1); } }
-  @keyframes drift3 { 0% { transform: translate(-10vw, 10vh); } 100% { transform: translate(15vw, -15vh) scale(1.2); } }
-  .grid-lines {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(120, 170, 255, 0.045) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(120, 170, 255, 0.045) 1px, transparent 1px);
-    background-size: 4rem 4rem;
-    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
-            mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
-  }
-  .sweep {
-    position: absolute; left: 0; right: 0; height: 30vh; top: -30vh;
-    background: linear-gradient(180deg, transparent, rgba(76, 201, 255, 0.035), transparent);
-    animation: sweep 18s linear infinite;
-  }
-  @keyframes sweep { to { transform: translateY(160vh); } }
+  .blob { position: absolute; border-radius: 50%; will-change: transform; }
+  .blob.b1 { width: 60vw; height: 60vw; left: -15vw; top: -25vw; background: radial-gradient(circle, rgba(30, 58, 138, 0.62), rgba(30, 58, 138, 0) 68%); animation: drift1 60s ease-in-out infinite alternate; }
+  .blob.b2 { width: 50vw; height: 50vw; right: -15vw; bottom: -25vw; background: radial-gradient(circle, rgba(15, 118, 110, 0.58), rgba(15, 118, 110, 0) 68%); animation: drift2 75s ease-in-out infinite alternate; }
+  .blob.b3 { width: 35vw; height: 35vw; left: 40vw; top: 30vh; background: radial-gradient(circle, rgba(91, 33, 182, 0.38), rgba(91, 33, 182, 0) 68%); animation: drift3 90s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(12vw, 10vh) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-10vw, -8vh) scale(1.1); } }
+  @keyframes drift3 { to { transform: translate(-20vw, -15vh) scale(0.85); } }
 
   /* ---------- Elrendezés ---------- */
   #app {
     position: fixed; inset: 0; z-index: 1;
-    padding: 1.4rem 1.6rem;
+    padding: 0.8rem 1.4rem;
     display: grid;
-    grid-template-columns: 29fr 24fr 20fr;
-    grid-template-rows: 17rem minmax(0, 1fr);
-    gap: 1.1rem;
+    grid-template-columns: 31rem minmax(0, 1fr) 20rem;
+    grid-template-rows: 13.6rem minmax(0, 1fr);
+    gap: 1rem;
     transition: transform 8s ease-in-out;
   }
   .card {
-    position: relative; min-height: 0; overflow: hidden;
+    position: relative; min-height: 0; min-width: 0; overflow: hidden;
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 1.1rem 1.2rem;
-    box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  }
-  .card::before {
-    content: ""; position: absolute; left: 1.2rem; right: 1.2rem; top: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(76, 201, 255, 0.45), transparent);
+    padding: 0.9rem 1.1rem;
   }
   .label {
-    font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
+    font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--muted); font-weight: 600;
   }
-  .sample-chip {
-    display: none; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em;
-    color: #1b1200; background: var(--warn); border-radius: 0.4rem; padding: 0.12rem 0.45rem;
+  .badge {
+    display: none; flex: none; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.3rem 0.65rem; border-radius: 0.5rem; line-height: 1.1;
+    background: rgba(251, 191, 36, 0.15); color: var(--warn); border: 1px solid rgba(251, 191, 36, 0.4);
   }
-  body.sample .sample-chip { display: inline-block; }
+  body.sample .badge { display: inline-block; }
 
   /* ---------- Óra ---------- */
-  .clock { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0.4rem; min-width: 0; }
-  .greet {
-    font-size: 2.1rem; font-weight: 600; line-height: 1.2;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  .clock { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0.3rem; min-width: 0; }
+  .greet-row { display: flex; align-items: center; gap: 0.9rem; min-width: 0; }
+  .greet { font-size: 1.9rem; font-weight: 600; line-height: 1.2; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .time {
-    font-size: 8.2rem; font-weight: 300; line-height: 0.95; letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums; margin: 0.2rem 0 0.35rem -0.3rem;
-    text-shadow: 0 0 2.5rem rgba(76, 201, 255, 0.25);
-    white-space: nowrap;
+    font-size: 9.1rem; font-weight: 800; line-height: 0.95; letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums; white-space: nowrap; margin-left: -0.25rem;
+    background: linear-gradient(180deg, #fff 30%, #b6c2e2);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .time .sec { font-size: 2.6rem; color: var(--accent); margin-left: 0.6rem; vertical-align: 0.4em; letter-spacing: 0; opacity: 0.9; }
-  .time .colon { opacity: 0.75; }
-  .date { font-size: 1.7rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .date b { font-weight: 700; }
-  .date span { color: var(--muted); }
-  .brief {
-    margin-top: 0.55rem; font-size: 1.15rem; line-height: 1.35; color: var(--muted);
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  .time .sec {
+    font-size: 0.32em; font-weight: 400; letter-spacing: 0; margin-left: 0.6rem;
+    color: var(--muted); -webkit-text-fill-color: var(--muted);
   }
-  .brief.sample-warning {
-    color: #1b1200; background: var(--warn); border-radius: 0.6rem; padding: 0.35rem 0.7rem;
-    font-weight: 700; -webkit-line-clamp: 2;
-  }
+  .date { font-size: 1.85rem; color: var(--soft); margin-top: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .date b { font-weight: 600; color: #fff; }
 
   /* ---------- Időjárás ---------- */
-  .weather { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 0.55rem; }
-  .card-head { display: flex; align-items: center; gap: 0.6rem; }
-  .card-head .grow { flex: 1; }
-  .wx-now { display: flex; align-items: center; gap: 0.9rem; min-height: 0; }
-  .wx-icon { width: 5.2rem; height: 5.2rem; flex: none; }
+  .weather { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 0.45rem; }
+  .card-head { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+  .grow { flex: 1; min-width: 0; }
+  .wx-now { display: flex; align-items: center; gap: 0.8rem; min-height: 0; }
+  .wx-icon { width: 4.4rem; height: 4.4rem; flex: none; }
   .wx-icon svg { width: 100%; height: 100%; }
-  .temp { font-size: 4.6rem; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
-  .temp small { font-size: 2rem; color: var(--muted); vertical-align: 1.6rem; }
-  .cond { font-size: 1.25rem; color: var(--text); line-height: 1.2; min-width: 0; }
-  .cond .feels { display: block; font-size: 1rem; color: var(--muted); margin-top: 0.2rem; }
-  .wx-meta { display: flex; gap: 1.1rem; font-size: 1.05rem; color: var(--muted); white-space: nowrap; }
+  .temp { font-size: 4.2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .temp small { font-size: 0.42em; font-weight: 400; color: var(--muted); vertical-align: 0.9em; margin-left: 0.15rem; }
+  .cond { font-size: 1.15rem; color: var(--soft); line-height: 1.2; min-width: 0; }
+  .cond .feels { display: block; font-size: 0.95rem; color: var(--muted); margin-top: 0.15rem; }
+  .wx-meta { display: flex; gap: 1rem; font-size: 1.05rem; color: var(--muted); white-space: nowrap; }
   .wx-meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
   .wx-meta svg { width: 1.1rem; height: 1.1rem; }
   .wx-meta b { color: var(--text); font-weight: 600; }
-  .forecast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: auto; }
-  .fc { background: rgba(255, 255, 255, 0.035); border-radius: 0.7rem; padding: 0.35rem 0.5rem 0.4rem; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; min-width: 0; }
-  .fc .row2 { display: flex; align-items: center; gap: 0.4rem; }
-  .fc svg { width: 1.7rem; height: 1.7rem; flex: none; }
-  .fc .d { font-size: 0.9rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .fc .t { font-size: 1.05rem; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .forecast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-top: auto; }
+  .fc { background: rgba(255, 255, 255, 0.04); border-radius: 0.7rem; padding: 0.3rem 0.4rem 0.35rem; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; min-width: 0; }
+  .fc .row2 { display: flex; align-items: center; gap: 0.35rem; }
+  .fc svg { width: 1.6rem; height: 1.6rem; flex: none; }
+  .fc .d { font-size: 0.85rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .fc .t { font-size: 1rem; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .fc .t span { color: var(--muted); font-weight: 400; }
 
-  .ic-sun { color: #ffc857; }
-  .ic-moon { color: #c9d6ff; }
+  .ic-sun { color: #fcd34d; }
+  .ic-moon { color: #c7d2fe; }
   .ic-cloud { color: #b9c7de; }
-  .ic-rain { color: #6cb8ff; }
-  .ic-snow { color: #e4f1ff; }
-  .ic-storm { color: #ffd166; }
+  .ic-rain { color: #60a5fa; }
+  .ic-snow { color: #e0f2fe; }
+  .ic-storm { color: #facc15; }
   .ic-fog { color: #9fb0c8; }
 
   /* ---------- Botok ---------- */
-  .bots { grid-column: 1 / span 2; grid-row: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 1.1rem; min-height: 0; }
-  .bot { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.05rem; --s: var(--idle); }
+  .bots {
+    grid-column: 1 / span 2; grid-row: 2; min-height: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 0.7rem;
+  }
+  .bot { display: flex; flex-direction: column; gap: 0.3rem; padding: 0.75rem 1rem; --s: var(--idle); }
   .bot[data-status="ok"] { --s: var(--ok); }
+  .bot[data-status="info"] { --s: var(--info); }
+  .bot[data-status="running"] { --s: var(--info); }
   .bot[data-status="warn"] { --s: var(--warn); }
   .bot[data-status="error"] { --s: var(--err); }
-  .bot[data-status="running"] { --s: var(--run); }
   .bot::after {
     content: ""; position: absolute; left: -3rem; top: -3rem; width: 9rem; height: 9rem; border-radius: 50%;
-    background: radial-gradient(circle, var(--s), transparent 70%); opacity: 0.14; pointer-events: none;
+    background: radial-gradient(circle, var(--s), transparent 70%); opacity: 0.13; pointer-events: none;
   }
-  .bot-head { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+  .bot-head { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
   .bot-icon {
-    width: 2.5rem; height: 2.5rem; flex: none; border-radius: 0.75rem; display: grid; place-items: center;
-    background: rgba(76, 201, 255, 0.1); color: var(--accent); font-size: 1.6rem; line-height: 1;
-    border: 1px solid rgba(76, 201, 255, 0.18);
+    width: 2.3rem; height: 2.3rem; flex: none; border-radius: 0.7rem; display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.07); color: var(--accent); font-size: 1.4rem; line-height: 1;
   }
-  .bot-icon svg { width: 1.55rem; height: 1.55rem; }
+  .bot-icon svg { width: 1.4rem; height: 1.4rem; }
   .bot-title { min-width: 0; flex: 1; }
-  .bot-name { font-size: 1.28rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .bot-sub { font-size: 0.9rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .bot-value { font-size: 2rem; font-weight: 700; line-height: 1.05; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+  .bot-name { font-size: 1.2rem; font-weight: 700; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bot-name.long { font-size: 1.05rem; }
+  .bot-sub { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.1rem; }
   .bot-line {
-    font-size: 1.08rem; line-height: 1.3; color: #c3d2e8; min-height: 0;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 1.1rem; line-height: 1.22; color: #dbe3f7; flex-shrink: 0;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .bot-foot { margin-top: auto; display: flex; align-items: center; gap: 0.45rem; font-size: 0.9rem; color: var(--dim); white-space: nowrap; }
+  .bot-foot { margin-top: auto; display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: var(--dim); white-space: nowrap; min-width: 0; }
   .bot-foot .st { color: var(--s); font-weight: 700; }
-  .dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--s); box-shadow: 0 0 0.6rem var(--s); flex: none; }
+  .bot-value {
+    margin-left: auto; padding-left: 0.5rem; font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--text);
+    font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; max-width: 55%;
+  }
+  .dot { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--s); box-shadow: 0 0 0.6rem var(--s); flex: none; }
   .bot[data-status="running"] .dot, .bot[data-status="error"] .dot { animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: 0.35; transform: scale(0.8); } }
-  .bot-head .sample-chip { flex: none; }
-  .bot-name.long { font-size: 1.12rem; }
 
-  /* ---------- Jarvis vezérlő kártya ---------- */
-  .jarvis { display: flex; flex-direction: column; gap: 0.5rem; background: linear-gradient(160deg, rgba(20, 40, 72, 0.85), rgba(16, 18, 44, 0.85)); }
-  .orb { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 50%; position: relative; }
+  /* ---------- Jarvis – mai összefoglaló ---------- */
+  .jarvis {
+    grid-column: span 2; display: flex; flex-direction: column; gap: 0.45rem;
+    background: linear-gradient(120deg, rgba(94, 234, 212, 0.11), rgba(129, 140, 248, 0.11));
+    border-color: rgba(129, 140, 248, 0.3);
+  }
+  .orb { width: 2.3rem; height: 2.3rem; flex: none; border-radius: 50%; position: relative; }
   .orb::before, .orb::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
-  .orb::before { background: conic-gradient(from 0deg, var(--accent), transparent 40%, var(--accent-2), transparent 85%, var(--accent)); animation: spin 6s linear infinite;
-    -webkit-mask: radial-gradient(circle, transparent 55%, #000 57%); mask: radial-gradient(circle, transparent 55%, #000 57%); }
+  .orb::before {
+    background: conic-gradient(from 0deg, var(--accent), transparent 40%, var(--accent-2), transparent 85%, var(--accent)); animation: spin 6s linear infinite;
+    -webkit-mask: radial-gradient(circle, transparent 55%, #000 57%); mask: radial-gradient(circle, transparent 55%, #000 57%);
+  }
   .orb::after { inset: 32%; background: var(--accent); box-shadow: 0 0 1rem var(--accent); animation: breathe 4s ease-in-out infinite; }
-  body.speaking .orb::before { animation-duration: 1.2s; }
-  body.speaking .orb::after { animation-duration: 0.8s; }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes breathe { 50% { transform: scale(0.7); opacity: 0.6; } }
-  .speak-btn {
-    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-    border: 0; border-radius: 0.9rem; padding: 0.75rem 0.8rem; font-size: 1.35rem; font-weight: 700; cursor: pointer;
-    color: #04121c; background: linear-gradient(90deg, var(--accent), #7fdcff);
-    box-shadow: 0 0.4rem 1.4rem rgba(76, 201, 255, 0.3);
+  .j-title { font-size: 1.3rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .j-src { font-size: 0.95rem; color: var(--muted); white-space: nowrap; flex: none; display: flex; align-items: center; gap: 0.4rem; }
+  .j-src.warn { color: var(--warn); }
+  .src-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0.5rem currentColor; }
+  .j-src.warn .src-dot { background: var(--warn); }
+  .j-text {
+    font-size: 1.45rem; line-height: 1.3; color: var(--text); flex-shrink: 0;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .speak-btn svg { width: 1.6rem; height: 1.6rem; }
-  .speak-btn:active { transform: scale(0.97); }
-  body.speaking .speak-btn { background: linear-gradient(90deg, #ff8a8a, var(--err)); color: #fff; box-shadow: 0 0.4rem 1.4rem rgba(255, 93, 108, 0.35); }
-  .j-meta { font-size: 0.98rem; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .j-meta b { color: var(--text); font-variant-numeric: tabular-nums; }
-  .j-meta.warn { color: var(--warn); white-space: normal; }
-  .j-meta.err { color: var(--err); }
-  .icon-btn {
-    width: 2.6rem; height: 2.6rem; border-radius: 0.8rem; border: 1px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.05); display: grid; place-items: center; cursor: pointer; color: var(--muted); flex: none;
-  }
-  .icon-btn svg { width: 1.4rem; height: 1.4rem; }
-  .src-dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: 0.05em; background: var(--ok); }
-  .src-dot.sample, .src-dot.stale { background: var(--warn); }
 
   /* ---------- Teendők ---------- */
   .todos { grid-column: 3; grid-row: 1 / span 2; display: flex; flex-direction: column; }
-  .todos .card-head { margin-bottom: 0.4rem; }
-  .todos h2 { margin: 0; font-size: 1.45rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  body.sample .count .w { display: none; }
-  .count { white-space: nowrap; flex: none; font-size: 0.9rem; font-weight: 700; color: var(--accent); background: rgba(76, 201, 255, 0.12); padding: 0.15rem 0.6rem; border-radius: 1rem; }
+  .todos .card-head { margin-bottom: 0.3rem; }
+  .todos h2 { margin: 0; font-size: 1.45rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .count { white-space: nowrap; flex: none; font-size: 0.9rem; font-weight: 700; color: var(--accent); background: rgba(94, 234, 212, 0.12); padding: 0.15rem 0.6rem; border-radius: 1rem; }
   .todo-list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0; overflow: hidden; }
   .todo {
-    display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.7rem 0.2rem 0.7rem 0.6rem;
+    display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.65rem 0.2rem 0.65rem 0.6rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06); position: relative;
   }
-  .todo.high::before { content: ""; position: absolute; left: 0; top: 0.75rem; bottom: 0.75rem; width: 0.22rem; border-radius: 0.2rem; background: var(--warn); }
-  .todo.next { background: linear-gradient(90deg, rgba(76, 201, 255, 0.12), transparent); border-radius: 0.6rem; }
-  .chk { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.1rem; border-radius: 50%; border: 2px solid var(--dim); display: grid; place-items: center; color: transparent; }
+  .todo.high::before { content: ""; position: absolute; left: 0; top: 0.7rem; bottom: 0.7rem; width: 0.22rem; border-radius: 0.2rem; background: var(--warn); }
+  .todo.next { background: linear-gradient(90deg, rgba(94, 234, 212, 0.13), transparent); border-radius: 0.6rem; }
+  .chk { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.1rem; border-radius: 50%; border: 2px solid var(--dim); display: grid; place-items: center; color: transparent; box-sizing: border-box; }
   .chk svg { width: 1rem; height: 1rem; }
   .todo.done .chk { border-color: var(--ok); background: var(--ok); color: #04140c; }
   .todo.reminder .chk { border: 0; color: var(--accent-2); }
@@ -249,36 +213,12 @@
   .todo-more { font-size: 1.05rem; color: var(--muted); padding: 0.6rem 0.6rem 0; }
   .empty { color: var(--muted); font-size: 1.2rem; padding: 1rem 0.6rem; }
 
-  /* ---------- Éjszakai halványítás, beállítások, toast ---------- */
+  /* ---------- Éjszakai halványítás ---------- */
   #night { position: fixed; inset: 0; z-index: 50; background: #000; opacity: 0; pointer-events: none; transition: opacity 30s ease; }
   body.night #night { opacity: 0.88; pointer-events: auto; }
-  body.night .blob, body.night .sweep, body.night .orb::before, body.night .orb::after { animation-play-state: paused; }
+  body.night .blob, body.night .orb::before, body.night .orb::after, body.night .dot { animation-play-state: paused; }
 
-  .toast {
-    position: fixed; left: 50%; bottom: 1.6rem; z-index: 60; transform: translate(-50%, 200%);
-    background: rgba(10, 16, 30, 0.96); border: 1px solid var(--card-border); color: var(--text);
-    padding: 0.8rem 1.3rem; border-radius: 0.9rem; font-size: 1.1rem; max-width: 70vw; text-align: center;
-    transition: transform 0.4s ease; box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.5);
-  }
-  .toast.show { transform: translate(-50%, 0); }
-
-  .modal { position: fixed; inset: 0; z-index: 70; display: none; place-items: center; background: rgba(0, 0, 0, 0.6); }
-  .modal.open { display: grid; }
-  .panel { width: 36rem; max-width: 92vw; background: #0d1526; border: 1px solid var(--card-border); border-radius: 1.2rem; padding: 1.5rem 1.6rem; box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.6); }
-  .panel h3 { margin: 0 0 1rem; font-size: 1.6rem; }
-  .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; font-size: 1.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-  .row input[type="time"], .row select {
-    font: inherit; font-size: 1.2rem; color: var(--text); background: #18233a; border: 1px solid var(--card-border);
-    border-radius: 0.6rem; padding: 0.35rem 0.6rem; color-scheme: dark;
-  }
-  .row input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: var(--accent); }
-  .row input[type="range"] { width: 12rem; accent-color: var(--accent); }
-  .panel .hint { font-size: 0.95rem; color: var(--muted); margin: 0.8rem 0 0; line-height: 1.4; }
-  .btns { display: flex; gap: 0.7rem; justify-content: flex-end; margin-top: 1.2rem; flex-wrap: wrap; }
-  .btn { border: 1px solid var(--card-border); background: rgba(255, 255, 255, 0.06); border-radius: 0.7rem; padding: 0.55rem 1.1rem; font-size: 1.1rem; cursor: pointer; }
-  .btn.primary { background: var(--accent); color: #04121c; border-color: transparent; font-weight: 700; }
-
-  /* Álló tájolás esetére egy egyszerű egyoszlopos tartalék */
+  /* Álló tájolás esetére egy egyszerű tartalék */
   @media (orientation: portrait) {
     html { font-size: min(2vw, 1.5vh); }
     #app { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto minmax(0, 1fr) auto; }
@@ -292,15 +232,13 @@
 <body>
   <div class="bg" aria-hidden="true">
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-    <div class="grid-lines"></div><div class="sweep"></div>
   </div>
 
   <main id="app">
     <section class="clock">
-      <div class="greet" id="greet">Jó napot</div>
-      <div class="time" id="time">--<span class="colon">:</span>--<span class="sec">--</span></div>
+      <div class="greet-row"><div class="greet" id="greet">Szép napot</div><span class="badge">Példa adatok</span></div>
+      <div class="time" id="time">--:--<span class="sec">--</span></div>
       <div class="date" id="date">&nbsp;</div>
-      <div class="brief" id="brief"></div>
     </section>
 
     <section class="card weather" id="weather"></section>
@@ -310,7 +248,6 @@
     <section class="card todos">
       <div class="card-head">
         <h2 class="grow">Mai teendők</h2>
-        <span class="sample-chip">PÉLDA</span>
         <span class="count" id="todoCount">0</span>
       </div>
       <ul class="todo-list" id="todoList"></ul>
@@ -318,25 +255,6 @@
   </main>
 
   <div id="night" title="Koppints a felébresztéshez"></div>
-  <div class="toast" id="toast"></div>
-
-  <div class="modal" id="settings">
-    <div class="panel">
-      <h3>Felolvasás beállításai</h3>
-      <div class="row"><label for="sEnabled">Automatikus felolvasás</label><input type="checkbox" id="sEnabled"></div>
-      <div class="row"><label for="sMorning">Reggeli időpont</label><input type="time" id="sMorning"></div>
-      <div class="row"><label for="sEvening">Esti időpont</label><input type="time" id="sEvening"></div>
-      <div class="row"><label for="sRate">Beszéd sebessége <b id="sRateVal">1.0</b></label><input type="range" id="sRate" min="0.7" max="1.4" step="0.05"></div>
-      <div class="row"><label for="sVoice">Hang</label><select id="sVoice"></select></div>
-      <p class="hint">Ezek a beállítások csak ezen az eszközön tárolódnak, és felülírják a data.json „settings” részét. A „Visszaállítás” törli őket.</p>
-      <div class="btns">
-        <button class="btn" id="sReset">Visszaállítás</button>
-        <button class="btn" id="sTest">Próba</button>
-        <button class="btn" id="sCancel">Mégse</button>
-        <button class="btn primary" id="sSave">Mentés</button>
-      </div>
-    </div>
-  </div>
 
 <script>
 (function () {
@@ -348,9 +266,6 @@
   var DEFAULT_SETTINGS = {
     name: "Péter",
     refreshMinutes: 5,
-    autoRead: { enabled: true, morning: "07:30", evening: "21:30" },
-    speechRate: 1.0,
-    voice: "",
     night: { start: "23:00", end: "06:00" },
     shiftMinutes: 3
   };
@@ -363,10 +278,12 @@
     { id: "eladas", name: "Eladás", subtitle: "Hirdetések", icon: "sell" },
     { id: "vasarlas", name: "Vásárlás", subtitle: "Figyelt termékek", icon: "buy" }
   ];
-  var STATUS_LABEL = { ok: "Rendben", warn: "Figyelem", error: "Hiba", running: "Fut", idle: "Szünetel" };
+  var STATUS_LABEL = { ok: "Rendben", info: "Infó", warn: "Figyelem", error: "Hiba", running: "Fut", idle: "Szünetel" };
+  var STALE_HOURS = 12; // ennél régebbi „updated” esetén figyelmeztetünk
 
   /* ================= Ikonok (inline SVG) ================= */
   var CLOUD = "M7 18h10a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 7.1 9.5 4.25 4.25 0 0 0 7 18z";
+  var MOON = "M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z";
   var ICONS = {
     // bot ikonok
     grok: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
@@ -378,9 +295,6 @@
     buy: '<path d="M2.5 3.5h3l2.4 11.2a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L21 7H6.4"/><circle cx="10" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/>',
     bot: '<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4"/><circle cx="12" cy="3.5" r="1"/><path d="M9 14h.01M15 14h.01" stroke-width="2.8"/>',
     // felület
-    speaker: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
-    stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',
-    sliders: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
     check: '<path d="M5 12.5l4.5 4.5L19 7.5" stroke-width="3"/>',
     bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
     drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
@@ -388,23 +302,23 @@
     pin: '<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
     // időjárás
     sun: '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
-    moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    moon: '<path d="' + MOON + '"/>',
     cloud: '<path d="' + CLOUD + '"/>',
     partly: '<path d="M8 2.5V4M2.5 8H4M4.1 4.1l1 1M11.9 4.1l-1 1"/><path d="M4.8 11.3A3.6 3.6 0 1 1 11.3 6.5"/><g transform="translate(2.5 2) scale(.9)"><path d="' + CLOUD + '"/></g>',
-    "partly-night": '<g transform="translate(-.5 -.5) scale(.6)"><path stroke-width="3" d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></g><g transform="translate(2.5 2) scale(.9)"><path d="' + CLOUD + '"/></g>',
+    "partly-night": '<g transform="translate(-.5 -.5) scale(.6)"><path stroke-width="3" d="' + MOON + '"/></g><g transform="translate(2.5 2) scale(.9)"><path d="' + CLOUD + '"/></g>',
     rain: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M8.5 18.5l-1 2.5M12.5 18.5l-1 2.5M16.5 18.5l-1 2.5"/>',
     snow: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M8 19.5h.01M12 21h.01M16 19.5h.01M10 22.5h.01M14 22.5h.01" stroke-width="2.6"/>',
     storm: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M12.5 14l-2.5 4h3.5l-2.5 4"/>',
     fog: '<g transform="translate(0 -4)"><path d="' + CLOUD + '"/></g><path d="M4 17.5h16M6 21h12"/>'
   };
-  var WX_CLASS = { sun: "ic-sun", moon: "ic-moon", cloud: "ic-cloud", partly: "ic-sun", "partly-night": "ic-moon", rain: "ic-rain", snow: "ic-snow", storm: "ic-storm", fog: "ic-fog", wind: "ic-cloud" };
+  var WX_CLASS = { sun: "ic-sun", moon: "ic-moon", cloud: "ic-cloud", partly: "ic-sun", "partly-night": "ic-moon", rain: "ic-rain", snow: "ic-snow", storm: "ic-storm", fog: "ic-fog" };
   var BOT_ICON_ALIAS = { "grok-bot": "grok", crazygames: "games", stats: "games", promofigyelo: "promo", tanulas: "learn", eladas: "sell", vasarlas: "buy" };
 
-  function svg(name, cls) {
+  function svg(name, style) {
     var body = ICONS[name];
     if (!body) return "";
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"' +
-      (cls ? ' class="' + cls + '"' : "") + ' aria-hidden="true">' + body + "</svg>";
+      (style ? ' style="' + style + '"' : "") + ' aria-hidden="true">' + body + "</svg>";
   }
   function iconHtml(icon) {
     // Ismert ikonnév → SVG, egyébként (pl. emoji) szövegként jelenik meg
@@ -441,15 +355,9 @@
     if (start == null || end == null) return false;
     return start <= end ? (min >= start && min < end) : (min >= start || min < end);
   }
-  function num(v) { var n = Number(v); return isFinite(n) ? n : null; }
+  function num(v) { var n = Number(v); return v !== "" && v != null && isFinite(n) ? n : null; }
   function deg(v) { var n = num(v); return n == null ? "–" : Math.round(n) + "°"; }
   function cap(s) { s = String(s || ""); return s.charAt(0).toUpperCase() + s.slice(1); }
-  function store(key, val) {
-    try {
-      if (val === undefined) return JSON.parse(localStorage.getItem(key) || "null");
-      if (val === null) localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(val));
-    } catch (e) { return null; }
-  }
 
   /* ================= Idő (Europe/Budapest) ================= */
   var fmtParts, fmtLong, fmtShort;
@@ -463,14 +371,13 @@
   function bpNow(date) {
     var d = date || new Date();
     if (!fmtParts) {
-      return { y: d.getFullYear(), mo: d.getMonth() + 1, d: d.getDate(), h: d.getHours(), mi: d.getMinutes(), s: d.getSeconds(),
+      return { h: d.getHours(), mi: d.getMinutes(), s: d.getSeconds(),
         weekday: WEEKDAYS[d.getDay()], long: d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + "." };
     }
     var p = {};
     fmtParts.formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
-    return { y: +p.year, mo: +p.month, d: +p.day, h: (+p.hour) % 24, mi: +p.minute, s: +p.second, weekday: p.weekday, long: fmtLong.format(d) };
+    return { h: (+p.hour) % 24, mi: +p.minute, s: +p.second, weekday: p.weekday, long: fmtLong.format(d) };
   }
-  function dayKey(n) { return n.y + "-" + pad(n.mo) + "-" + pad(n.d); }
   function hhmm(date) { return fmtShort ? fmtShort.format(date) : pad(date.getHours()) + ":" + pad(date.getMinutes()); }
   function ago(date) {
     if (!(date instanceof Date) || isNaN(date)) return "";
@@ -482,8 +389,8 @@
     return Math.floor(s / 86400) + " napja";
   }
   function greeting(h) {
-    if (h >= 4 && h < 10) return "Jó reggelt";
-    if (h >= 10 && h < 18) return "Jó napot";
+    if (h >= 5 && h < 10) return "Jó reggelt";
+    if (h >= 10 && h < 18) return "Szép napot";
     if (h >= 18 && h < 22) return "Jó estét";
     return "Jó éjszakát";
   }
@@ -500,46 +407,47 @@
   };
 
   function settings() {
-    var fromData = state.data && state.data.settings;
-    return merge(merge(DEFAULT_SETTINGS, fromData), store("jarvis.settings") || {});
+    return merge(DEFAULT_SETTINGS, state.data && state.data.settings);
   }
+  function isSample() { return state.source === "sample" || !!(state.data && state.data.example === true); }
 
   /* ================= Beépített példaadat ================= */
   function makeSample() {
     var now = Date.now();
     function minsAgo(m) { return new Date(now - m * 60000).toISOString(); }
     return {
+      example: true,
       updated: minsAgo(4),
       settings: { name: "Péter" },
       briefing: {
-        morning: "Ez csak példa: ma 3 nyitott teendő vár, a Tippmix elemzés elkészült.",
-        evening: "Ez csak példa: a nap jól alakult, holnapra esőt mondanak."
+        morning: "Példa: nyugodt nap, 5 nyitott teendő, 10-kor statisztika előadás. A Tippmix elemzés kész, a Promó Figyelő 3 új promót talált.",
+        evening: "Példa: a nap nagy része kész, 2 teendő maradt estére. Holnap esőt mondanak, reggel vigyél esernyőt."
       },
       weather: {
         location: "Budapest", temp: 14, feels_like: 12, condition: "Részben felhős", icon: "partly",
-        high: 18, low: 9, precip_chance: 20, wind_kmh: 12, humidity: 64,
+        high: 18, low: 9, precip_chance: 20, wind_kmh: 12,
         forecast: [
-          { day: "Holnap", icon: "rain", condition: "esős", high: 15, low: 8 },
-          { day: "Kedd", icon: "cloud", condition: "borult", high: 13, low: 7 },
-          { day: "Szerda", icon: "sun", condition: "napos", high: 17, low: 6 }
+          { day: "Holnap", icon: "rain", high: 15, low: 8 },
+          { day: "Kedd", icon: "cloud", high: 13, low: 7 },
+          { day: "Szerda", icon: "sun", high: 17, low: 6 }
         ]
       },
       bots: [
-        { id: "grok", name: "Grok Bot", subtitle: "Napi összefoglaló", icon: "grok", status: "ok", value: "Kész", line: "Elkészült a mai összefoglaló: 5 hír, 2 kiemelt téma.", updated: minsAgo(38) },
-        { id: "tippmix", name: "Tippmix", subtitle: "Kétnapos elemzés", icon: "tippmix", status: "ok", value: "6 tipp", line: "Hétvégi elemzés kész, legjobb szorzó 2,35.", updated: minsAgo(95) },
-        { id: "crazygames", name: "CrazyGames Stats", subtitle: "Játékok számai", icon: "games", status: "ok", value: "12 480", line: "Tegnapi játékmenet, +8% az előző naphoz képest.", updated: minsAgo(60) },
-        { id: "promo", name: "Promó Figyelő", subtitle: "TikTok · Instagram", icon: "promo", status: "warn", value: "3 új", line: "3 új promóció, 1 ma 20:00-kor lejár.", updated: minsAgo(12) },
-        { id: "tanulas", name: "Tanulás", subtitle: "Napi tanulás", icon: "learn", status: "running", value: "45 perc", line: "Ma: angol szókártyák és statisztika jegyzet.", updated: minsAgo(20) },
-        { id: "eladas", name: "Eladás", subtitle: "Hirdetések", icon: "sell", status: "ok", value: "2 aktív", line: "1 új üzenet egy érdeklődőtől.", updated: minsAgo(150) },
-        { id: "vasarlas", name: "Vásárlás", subtitle: "Figyelt termékek", icon: "buy", status: "idle", value: "–", line: "Nincs árváltozás a figyelt termékeknél.", updated: minsAgo(300) }
+        { id: "grok", name: "Grok Bot", subtitle: "Napi összefoglaló", icon: "grok", status: "ok", value: "5 hír", line: "Példa: kész a mai összefoglaló, 2 kiemelt téma, minden bot jelentett reggel.", updated: minsAgo(38) },
+        { id: "tippmix", name: "Tippmix", subtitle: "Kétnapos elemzés", icon: "tippmix", status: "ok", value: "6 tipp", line: "Példa: hétfő–kedd elemzés kész, legjobb szorzó 2,35, részletek a chatben.", updated: minsAgo(95) },
+        { id: "crazygames", name: "CrazyGames Stats", subtitle: "Játékok számai", icon: "games", status: "ok", value: "12 480", line: "Példa: tegnapi játékmenetek, +8% az előző naphoz képest, 1 játék Basic Launch-ban.", updated: minsAgo(60) },
+        { id: "promo", name: "Promó Figyelő", subtitle: "TikTok · Instagram", icon: "promo", status: "warn", value: "3 új", line: "Példa: 3 új promóció, az egyik ma 20:00-kor lejár – érdemes ránézni.", updated: minsAgo(12) },
+        { id: "tanulas", name: "Tanulás", subtitle: "Napi tanulás", icon: "learn", status: "running", value: "45 perc", line: "Példa: holnap matek dolgozat, ma este 1 óra ismétlés és angol szókártyák.", updated: minsAgo(20) },
+        { id: "eladas", name: "Eladás", subtitle: "Hirdetések", icon: "sell", status: "ok", value: "2 aktív", line: "Példa: 2 aktív hirdetés, 1 új üzenet egy érdeklődőtől a monitor miatt.", updated: minsAgo(150) },
+        { id: "vasarlas", name: "Vásárlás", subtitle: "Figyelt termékek", icon: "buy", status: "idle", value: "–", line: "Példa: tej, kenyér, tojás a listán; a rendelt csomag holnap érkezik.", updated: minsAgo(300) }
       ],
       todos: [
-        { time: "08:30", text: "Reggeli edzés", done: true },
-        { time: "10:00", text: "Statisztika előadás – B épület", priority: "high" },
-        { time: "14:00", text: "Csomag átvétele a portán", kind: "reminder" },
-        { time: "19:00", text: "Tippmix szelvény ellenőrzése" },
-        { text: "Mosás" },
-        { time: "22:30", text: "Telefon töltőre", kind: "reminder" }
+        { time: "08:30", text: "Példa: reggeli edzés", done: true },
+        { time: "10:00", text: "Példa: statisztika előadás – B épület", priority: "high" },
+        { time: "14:00", text: "Példa: csomag átvétele a portán", kind: "reminder" },
+        { time: "19:00", text: "Példa: matek ismétlés" },
+        { text: "Példa: mosás a koliban" },
+        { time: "22:30", text: "Példa: telefon töltőre", kind: "reminder" }
       ]
     };
   }
@@ -585,7 +493,7 @@
     refreshTimer = setTimeout(load, Math.max(1, mins) * 60000);
   }
 
-  /* ================= Megjelenítés ================= */
+  /* ================= Időjárás segédek ================= */
   var WMO = [
     [[0], "sun", "Derült"], [[1], "partly", "Többnyire derült"], [[2], "partly", "Részben felhős"], [[3], "cloud", "Borult"],
     [[45, 48], "fog", "Ködös"], [[51, 53, 55, 56, 57], "rain", "Szitálás"], [[61, 63, 65, 66, 67], "rain", "Eső"],
@@ -598,7 +506,7 @@
   function wxIcon(w, isNow) {
     var icon = w && w.icon;
     var fromCode = w && w.code != null ? wmo(w.code) : null;
-    if (!icon && fromCode) icon = fromCode.icon;
+    if (!ICONS[icon] && fromCode) icon = fromCode.icon;
     if (!ICONS[icon]) icon = "cloud";
     if (isNow) {
       var h = bpNow().h;
@@ -615,38 +523,29 @@
     return c ? c.text : "";
   }
 
+  /* ================= Megjelenítés ================= */
   function renderClock(n) {
-    $("time").innerHTML = pad(n.h) + '<span class="colon">:</span>' + pad(n.mi) + '<span class="sec">' + pad(n.s) + "</span>";
+    $("time").innerHTML = pad(n.h) + ":" + pad(n.mi) + '<span class="sec">' + pad(n.s) + "</span>";
   }
 
   function renderHeader(n) {
-    var s = settings();
-    $("greet").textContent = greeting(n.h) + ", " + (s.name || "Péter");
-    $("date").innerHTML = "<b>" + esc(cap(n.weekday)) + "</b> <span>·</span> " + esc(n.long);
-    var brief = $("brief");
-    if (state.source === "sample") {
-      brief.className = "brief sample-warning";
-      brief.textContent = "⚠ PÉLDA ADATOK – a data.json nem tölthető be, ez csak minta!";
-      return;
-    }
-    var b = (state.data && state.data.briefing) || {};
-    var text = typeof b === "string" ? b : (isMorningHalf(n.h) ? (b.morning || b.evening) : (b.evening || b.morning));
-    brief.className = "brief";
-    brief.textContent = text || "";
+    $("greet").textContent = greeting(n.h) + ", " + (settings().name || "Péter");
+    $("date").innerHTML = esc(n.long) + " · <b>" + esc(cap(n.weekday)) + "</b>";
   }
 
   function renderWeather() {
     var w = (state.data && state.data.weather) || {};
     var icon = wxIcon(w, true);
     var fc = Array.isArray(w.forecast) ? w.forecast.slice(0, 3) : [];
-    var html = '<div class="card-head"><span class="label grow">' + svg("pin").replace("<svg", '<svg style="display:inline-block;width:1rem;height:1rem;vertical-align:-0.12em;margin-right:.3rem"') +
-      esc(w.location || "Budapest") + '</span><span class="sample-chip">PÉLDA</span></div>' +
+    var html = '<div class="card-head"><span class="label grow">' +
+      svg("pin", "display:inline-block;width:1rem;height:1rem;vertical-align:-0.12em;margin-right:.3rem") +
+      esc(w.location || "Budapest") + "</span></div>" +
       '<div class="wx-now"><div class="wx-icon ' + (WX_CLASS[icon] || "") + '">' + svg(icon) + "</div>" +
       '<div class="temp">' + (num(w.temp) == null ? "–" : Math.round(num(w.temp))) + "<small>°C</small></div>" +
       '<div class="cond">' + esc(wxText(w) || "Nincs adat") +
       (num(w.feels_like) != null ? '<span class="feels">Hőérzet ' + deg(w.feels_like) + "</span>" : "") + "</div></div>" +
       '<div class="wx-meta">' +
-      '<span>↑<b>' + deg(w.high) + "</b> ↓<b>" + deg(w.low) + "</b></span>" +
+      "<span>↑<b>" + deg(w.high) + "</b> ↓<b>" + deg(w.low) + "</b></span>" +
       (num(w.precip_chance) != null ? "<span>" + svg("drop") + "<b>" + Math.round(num(w.precip_chance)) + "%</b></span>" : "") +
       (num(w.wind_kmh) != null ? "<span>" + svg("wind") + "<b>" + Math.round(num(w.wind_kmh)) + "</b> km/h</span>" : "") +
       "</div>";
@@ -663,55 +562,70 @@
   function botList() {
     var bots = state.data && Array.isArray(state.data.bots) && state.data.bots.length ? state.data.bots : null;
     if (bots) return bots;
-    return DEFAULT_BOTS.map(function (b) { return merge(b, { status: "idle", value: "–", line: "Nincs adat" }); });
+    return DEFAULT_BOTS.map(function (b) { return merge(b, { status: "idle", value: "–", line: "Nincs friss jelentés." }); });
   }
 
-  function renderBots() {
-    var html = botList().map(function (b) {
-      var st = STATUS_LABEL[b.status] ? b.status : "idle";
-      var upd = b.updated ? new Date(b.updated) : null;
-      return '<article class="card bot" data-status="' + st + '">' +
-        '<div class="bot-head"><div class="bot-icon">' + iconHtml(b.icon || b.id) + "</div>" +
-        '<div class="bot-title bot-sub">' + esc(b.subtitle || "") + '</div><span class="sample-chip">PÉLDA</span></div>' +
-        '<div class="bot-name' + (String(b.name || b.id || "").length > 14 ? " long" : "") + '">' + esc(b.name || b.id || "Bot") + "</div>" +
-        (b.value != null && b.value !== "" ? '<div class="bot-value">' + esc(b.value) + "</div>" : "") +
-        '<div class="bot-line">' + esc(b.line || "") + "</div>" +
-        '<div class="bot-foot"><span class="dot"></span><span class="st">' + esc(b.status_text || STATUS_LABEL[st]) + "</span>" +
-        (upd && !isNaN(upd) ? "<span>· " + esc(ago(upd)) + "</span>" : "") + '</div>' +
-        "</article>";
-    }).join("");
-    html += jarvisCardHtml();
-    $("bots").innerHTML = html;
-    bindJarvis();
-  }
-
-  function jarvisCardHtml() {
-    var s = settings();
-    var srcText, srcCls = state.source;
-    var upd = state.data && state.data.updated ? new Date(state.data.updated) : state.fetchedAt;
-    if (state.source === "sample") srcText = "Példa adatok";
-    else if (state.source === "stale") srcText = "Offline · utolsó: " + (state.fetchedAt ? hhmm(state.fetchedAt) : "");
-    else srcText = "Élő adatok · " + (upd && !isNaN(upd) ? ago(upd) : "");
-    var auto = autoHtml(s);
-    var needTap = s.autoRead && s.autoRead.enabled && !window.fully && navigator.userActivation && !navigator.userActivation.hasBeenActive;
-    return '<article class="card jarvis">' +
-      '<div class="card-head"><div class="orb"></div><div class="grow" style="min-width:0"><div class="bot-name">Jarvis</div></div>' +
-      '<button class="icon-btn" id="btnSettings" aria-label="Beállítások">' + svg("sliders") + "</button></div>" +
-      '<button class="speak-btn" id="btnSpeak">' + (speech.active ? svg("stop") + "<span>Leállítás</span>" : svg("speaker") + "<span>Felolvasás</span>") + "</button>" +
-      '<div class="j-meta' + (state.source === "stale" ? " err" : "") + '" title="' + esc(state.lastError) + '"><span class="src-dot ' + srcCls + '"></span>' + esc(srcText) + "</div>" +
-      (needTap ? '<div class="j-meta warn">Koppints egyszer az auto felolvasáshoz!</div>' : '<div class="j-meta">' + auto + "</div>") +
+  function botCardHtml(b) {
+    var st = STATUS_LABEL[b.status] ? b.status : "idle";
+    var upd = b.updated ? new Date(b.updated) : null;
+    var name = String(b.name || b.id || "Bot");
+    return '<article class="card bot" data-status="' + st + '">' +
+      '<div class="bot-head"><div class="bot-icon">' + iconHtml(b.icon || b.id) + "</div>" +
+      '<div class="bot-title"><div class="bot-name' + (name.length > 18 ? " long" : "") + '">' + esc(name) + "</div>" +
+      (b.subtitle ? '<div class="bot-sub">' + esc(b.subtitle) + "</div>" : "") + "</div></div>" +
+      '<div class="bot-line">' + esc(b.line || "Nincs friss jelentés.") + "</div>" +
+      '<div class="bot-foot"><span class="dot"></span><span class="st">' + esc(b.status_text || STATUS_LABEL[st]) + "</span>" +
+      (upd && !isNaN(upd) ? "<span>· " + esc(ago(upd)) + "</span>" : "") +
+      (b.value != null && b.value !== "" ? '<span class="bot-value">' + esc(b.value) + "</span>" : "") + "</div>" +
       "</article>";
   }
-  function autoHtml(s) {
-    return s.autoRead && s.autoRead.enabled
-      ? 'Auto: <b>' + esc(s.autoRead.morning || "–") + "</b> · <b>" + esc(s.autoRead.evening || "–") + "</b>"
-      : "Auto felolvasás: <b>ki</b>";
+
+  function autoBriefing(n) {
+    // Ha a data.json nem ad összefoglalót, rövid szöveget rakunk össze az adatokból
+    var d = state.data || {};
+    var open = todoItems().filter(function (t) { return !t.done; }).length;
+    var attention = botList().filter(function (b) { return b.status === "warn" || b.status === "error"; });
+    var parts = [open ? open + " nyitott teendő mára." : "Mára nincs nyitott teendő."];
+    if (attention.length) parts.push("Figyelmet kér: " + attention.map(function (b) { return b.name || b.id; }).join(", ") + ".");
+    else parts.push("Minden bot rendben.");
+    var w = d.weather;
+    if (w && num(w.temp) != null) parts.push("Kint " + Math.round(num(w.temp)) + " fok" + (wxText(w) ? ", " + wxText(w).toLowerCase() : "") + ".");
+    return parts.join(" ");
   }
-  function bindJarvis() {
-    $("btnSpeak").onclick = function () {
-      if (speech.active) speech.stop(); else speech.say(buildSpeech(isMorningHalf(bpNow().h) ? "morning" : "evening"), false);
-    };
-    $("btnSettings").onclick = openSettings;
+
+  function jarvisCardHtml(n) {
+    var srcText, warn = false;
+    var upd = state.data && state.data.updated ? new Date(state.data.updated) : state.fetchedAt;
+    if (isSample()) { srcText = "Példa adatok"; warn = true; }
+    else if (state.source === "stale") { srcText = "Offline · utolsó: " + (state.fetchedAt ? hhmm(state.fetchedAt) : "–"); warn = true; }
+    else {
+      var old = upd && !isNaN(upd) && (Date.now() - upd.getTime()) > STALE_HOURS * 3600000;
+      srcText = (old ? "Régi adat" : "Élő adatok") + (upd && !isNaN(upd) ? " · " + ago(upd) : "");
+      warn = !!old;
+    }
+    var b = state.data && state.data.briefing;
+    var text = typeof b === "string" ? b : (b ? (isMorningHalf(n.h) ? (b.morning || b.evening) : (b.evening || b.morning)) : "");
+    return '<article class="card jarvis">' +
+      '<div class="card-head"><div class="orb"></div><div class="j-title grow">Jarvis – mai összefoglaló</div>' +
+      '<div class="j-src' + (warn ? " warn" : "") + '" title="' + esc(state.lastError) + '"><span class="src-dot"></span>' + esc(srcText) + "</div></div>" +
+      '<div class="j-text">' + esc(text || autoBriefing(n)) + "</div>" +
+      "</article>";
+  }
+
+  function renderBots(n) {
+    $("bots").innerHTML = jarvisCardHtml(n) + botList().map(botCardHtml).join("");
+    fitCards();
+  }
+  function fitCards() {
+    // Biztonsági háló más betűtípusra / képarányra: ha egy kártya szövege nem fér ki,
+    // kevesebb sort mutatunk (mindig egész sorral, „…”-tal), így nincs levágott sor.
+    var cards = document.querySelectorAll("#bots .card");
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i], line = c.querySelector(".bot-line, .j-text");
+      if (!line) continue;
+      line.style.webkitLineClamp = "";
+      for (var n = 3; n > 1 && c.scrollHeight > c.clientHeight + 1; n--) line.style.webkitLineClamp = String(n - 1);
+    }
   }
 
   function todoItems() {
@@ -735,7 +649,7 @@
       if (nextIdx < 0 && !t.done && tm != null && tm >= nowMin) nextIdx = i;
     });
     var open = items.filter(function (t) { return !t.done; }).length;
-    $("todoCount").innerHTML = open + '<span class="w"> nyitott</span>';
+    $("todoCount").textContent = open + " nyitott";
     var ul = $("todoList");
     if (!items.length) {
       ul.innerHTML = '<li class="empty">Mára nincs teendő. 🎉</li>';
@@ -767,241 +681,18 @@
 
   function renderAll() {
     var n = bpNow();
-    document.body.classList.toggle("sample", state.source === "sample");
+    document.body.classList.toggle("sample", isSample());
     renderClock(n);
     renderHeader(n);
     renderWeather();
-    renderBots();
+    renderBots(n);
     renderTodos(n);
-  }
-
-  /* ================= Felolvasás ================= */
-  function timeWords(min, suffix) {
-    var h = Math.floor(min / 60), m = min % 60;
-    if (suffix) return m ? h + " óra " + m + " perckor" : h + " órakor";
-    return m ? h + " óra " + m + " perc" : h + " óra";
-  }
-  function tempWords(v) {
-    var n = num(v);
-    if (n == null) return null;
-    n = Math.round(n);
-    return (n < 0 ? "mínusz " + (-n) : String(n)) + " fok";
-  }
-  function sentence(s) {
-    s = String(s || "").trim();
-    if (!s) return "";
-    return /[.!?…]$/.test(s) ? s : s + ".";
-  }
-
-  function buildSpeech(slot) {
-    var n = bpNow();
-    var s = settings();
-    var d = state.data || {};
-    var morning = slot === "morning";
-    var out = [];
-    if (state.source === "sample") out.push("Figyelem, a data.json nem érhető el, ezek csak példa adatok.");
-    out.push(greeting(n.h) + ", " + (s.name || "Péter") + "!");
-    out.push("Ma " + n.long.replace(/\.$/, "") + ", " + n.weekday + " van, az idő " + timeWords(n.h * 60 + n.mi) + ".");
-
-    var w = d.weather || {};
-    var t = tempWords(w.temp);
-    if (t) {
-      var txt = wxText(w);
-      var loc = w.location || "Budapest";
-      var where = loc === "Budapest" ? "Budapesten" : loc + " környékén";
-      out.push(where + " jelenleg " + t + " van" + (txt ? ", " + txt.toLowerCase() : "") + ".");
-      if (morning) {
-        var parts = [];
-        if (tempWords(w.high)) parts.push("a csúcshőmérséklet " + tempWords(w.high));
-        if (tempWords(w.low)) parts.push("a minimum " + tempWords(w.low));
-        if (num(w.precip_chance) != null) parts.push("a csapadék esélye " + Math.round(num(w.precip_chance)) + " százalék");
-        if (parts.length) out.push(cap(parts.join(", ")) + ".");
-      } else if (Array.isArray(w.forecast) && w.forecast[0]) {
-        var f = w.forecast[0];
-        var ft = wxText(f);
-        out.push(cap((f.day || "holnap").toLowerCase()) + (ft ? " " + ft.toLowerCase() + "," : "") +
-          (tempWords(f.low) && tempWords(f.high) ? " " + Math.round(num(f.low)) + " és " + Math.round(num(f.high)) + " fok között." : "."));
-      }
-    }
-
-    var b = d.briefing;
-    var bt = typeof b === "string" ? b : (b && (morning ? b.morning : b.evening));
-    if (bt && state.source !== "sample") out.push(sentence(bt));
-
-    var todos = todoItems();
-    var open = todos.filter(function (x) { return !x.done; });
-    var done = todos.length - open.length;
-    if (!todos.length) out.push("Mára nincs felírt teendőd.");
-    else if (morning) {
-      out.push(open.length ? "Mai teendőid, összesen " + open.length + ":" : "Minden mai teendőd kész.");
-      open.forEach(function (x) {
-        var tm = parseHM(x.time);
-        out.push(sentence((tm != null ? timeWords(tm, true) + ": " : "") + (x.text || x.title)));
-      });
-    } else {
-      out.push("Ma " + done + " teendőt végeztél el" + (open.length ? ", " + open.length + " maradt nyitva." : ", minden kész."));
-      open.slice(0, 5).forEach(function (x) { out.push(sentence(x.text || x.title)); });
-    }
-
-    var bots = botList().filter(function (x) { return x.line && x.line !== "Nincs adat"; });
-    if (bots.length) {
-      out.push("A botok jelentései.");
-      bots.forEach(function (x) {
-        var warn = x.status === "error" ? " Hibát jelez." : x.status === "warn" ? " Figyelmet igényel." : "";
-        out.push(sentence((x.name || x.id) + ": " + x.line) + warn);
-      });
-    }
-    out.push(morning ? "Szép napot!" : "Jó pihenést!");
-    return out.join(" ");
-  }
-
-  var speech = {
-    active: false,
-    session: 0,
-    timer: null,
-    hasWS: "speechSynthesis" in window && "SpeechSynthesisUtterance" in window,
-    hasFully: function () { return !!(window.fully && typeof window.fully.textToSpeech === "function"); },
-    voices: function () {
-      return new Promise(function (resolve) {
-        if (!speech.hasWS) return resolve([]);
-        var v = window.speechSynthesis.getVoices();
-        if (v && v.length) return resolve(v);
-        var done = false;
-        var finish = function () { if (done) return; done = true; resolve(window.speechSynthesis.getVoices() || []); };
-        window.speechSynthesis.addEventListener ? window.speechSynthesis.addEventListener("voiceschanged", finish, { once: true }) : (window.speechSynthesis.onvoiceschanged = finish);
-        setTimeout(finish, 1500);
-      });
-    },
-    pickVoice: function (voices) {
-      var want = settings().voice;
-      var v = null;
-      if (want) v = voices.filter(function (x) { return x.name === want; })[0];
-      if (!v) v = voices.filter(function (x) { return /^hu/i.test(x.lang); })[0];
-      return v || null;
-    },
-    setActive: function (on) {
-      speech.active = on;
-      document.body.classList.toggle("speaking", on);
-      var btn = $("btnSpeak");
-      if (btn) btn.innerHTML = on ? svg("stop") + "<span>Leállítás</span>" : svg("speaker") + "<span>Felolvasás</span>";
-    },
-    stop: function () {
-      speech.session++;
-      clearTimeout(speech.timer);
-      if (speech.hasWS) window.speechSynthesis.cancel();
-      if (speech.hasFully() && typeof window.fully.stopTextToSpeech === "function") { try { window.fully.stopTextToSpeech(); } catch (e) {} }
-      speech.setActive(false);
-    },
-    sayFully: function (text) {
-      try { window.fully.textToSpeech(text, "hu_HU"); } catch (e) { window.fully.textToSpeech(text); }
-      speech.setActive(true);
-      var my = speech.session;
-      // A Fully nem jelez, ha végzett – becsült idő után visszaállunk
-      speech.timer = setTimeout(function () { if (my === speech.session) speech.setActive(false); }, Math.min(240000, text.length * 75 + 2000));
-    },
-    say: function (text, auto) {
-      speech.stop();
-      var my = speech.session;
-      return speech.voices().then(function (voices) {
-        if (my !== speech.session) return;
-        if ((!speech.hasWS || !voices.length) && speech.hasFully()) return speech.sayFully(text);
-        if (!speech.hasWS) { toast("Ez a böngésző nem támogatja a felolvasást."); return; }
-        var voice = speech.pickVoice(voices);
-        if (!voice && !auto) toast("Nincs magyar (hu-HU) hang telepítve – az alapértelmezett hangot használom.");
-        // Mondatokra bontva olvassuk fel (a hosszú szöveget néhány böngésző félbevágja)
-        var chunks = text.match(/[^.!?]+[.!?]*/g) || [text];
-        var rate = num(settings().speechRate) || 1;
-        speech.setActive(true);
-        chunks.forEach(function (c, i) {
-          var u = new SpeechSynthesisUtterance(c.trim());
-          u.lang = "hu-HU";
-          if (voice) u.voice = voice;
-          u.rate = rate;
-          if (i === chunks.length - 1) u.onend = function () { if (my === speech.session) speech.setActive(false); };
-          u.onerror = function (e) {
-            if (my !== speech.session) return;
-            if (e.error === "interrupted" || e.error === "canceled") return;
-            speech.session++;
-            window.speechSynthesis.cancel();
-            if (speech.hasFully()) return speech.sayFully(text);
-            speech.setActive(false);
-            if (e.error === "not-allowed") toast("A böngésző letiltotta a hangot – koppints egyszer a képernyőre.");
-            else toast("Felolvasási hiba: " + e.error);
-          };
-          window.speechSynthesis.speak(u);
-        });
-      });
-    }
-  };
-
-  function checkAutoRead(n) {
-    var s = settings();
-    if (!s.autoRead || !s.autoRead.enabled) return;
-    var nowMin = n.h * 60 + n.mi;
-    ["morning", "evening"].forEach(function (slot) {
-      var t = parseHM(s.autoRead[slot]);
-      if (t == null || nowMin < t || nowMin > t + 2) return;
-      var key = "jarvis.autoread." + dayKey(n) + "." + slot;
-      if (state[key] || store(key)) return;
-      state[key] = true;
-      store(key, true);
-      speech.say(buildSpeech(slot), true);
-    });
-  }
-
-  /* ================= Beállítások panel ================= */
-  function openSettings() {
-    var s = settings();
-    $("sEnabled").checked = !!(s.autoRead && s.autoRead.enabled);
-    $("sMorning").value = (s.autoRead && s.autoRead.morning) || "07:30";
-    $("sEvening").value = (s.autoRead && s.autoRead.evening) || "21:30";
-    $("sRate").value = num(s.speechRate) || 1;
-    $("sRateVal").textContent = Number($("sRate").value).toFixed(2);
-    speech.voices().then(function (voices) {
-      var sel = $("sVoice");
-      var hu = voices.filter(function (v) { return /^hu/i.test(v.lang); });
-      var list = hu.length ? hu : voices;
-      sel.innerHTML = '<option value="">Automatikus (magyar)</option>' + list.map(function (v) {
-        return '<option value="' + esc(v.name) + '"' + (v.name === s.voice ? " selected" : "") + ">" + esc(v.name + " (" + v.lang + ")") + "</option>";
-      }).join("");
-      if (!voices.length) sel.innerHTML = '<option value="">' + (speech.hasFully() ? "Android TTS (Fully)" : "Nincs elérhető hang") + "</option>";
-    });
-    $("settings").classList.add("open");
-  }
-  function closeSettings() { $("settings").classList.remove("open"); }
-  function readForm() {
-    return {
-      autoRead: { enabled: $("sEnabled").checked, morning: $("sMorning").value, evening: $("sEvening").value },
-      speechRate: Number($("sRate").value),
-      voice: $("sVoice").value
-    };
-  }
-  $("sRate").oninput = function () { $("sRateVal").textContent = Number(this.value).toFixed(2); };
-  $("sCancel").onclick = closeSettings;
-  $("sSave").onclick = function () { store("jarvis.settings", readForm()); closeSettings(); renderAll(); toast("Beállítások elmentve."); };
-  $("sReset").onclick = function () { store("jarvis.settings", null); closeSettings(); renderAll(); toast("Visszaállítva a data.json beállításaira."); };
-  $("sTest").onclick = function () {
-    var prev = store("jarvis.settings");
-    store("jarvis.settings", readForm());
-    var restore = function () { store("jarvis.settings", prev); };
-    speech.say("Szia " + (settings().name || "Péter") + "! Így hangzik a felolvasás.", false).then(restore, restore);
-  };
-  $("settings").addEventListener("click", function (e) { if (e.target === this) closeSettings(); });
-
-  /* ================= Toast ================= */
-  var toastTimer;
-  function toast(msg) {
-    var t = $("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 5000);
   }
 
   /* ================= Beégés elleni eltolás + éjszakai halványítás ================= */
   function shift() {
     var rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    var max = rem * 0.55;
+    var max = rem * 0.5;
     var dx = Math.round((Math.random() * 2 - 1) * max);
     var dy = Math.round((Math.random() * 2 - 1) * max);
     $("app").style.transform = "translate(" + dx + "px," + dy + "px)";
@@ -1009,8 +700,7 @@
   function checkNight(n) {
     var s = settings();
     var night = inWindow(n.h * 60 + n.mi, parseHM(s.night && s.night.start), parseHM(s.night && s.night.end));
-    var on = night && Date.now() > state.wakeUntil;
-    document.body.classList.toggle("night", on);
+    document.body.classList.toggle("night", night && Date.now() > state.wakeUntil);
   }
   $("night").addEventListener("click", function () {
     state.wakeUntil = Date.now() + 60000; // koppintásra 1 percre felébred
@@ -1026,30 +716,25 @@
       renderHeader(n);
       if (state.data) {
         renderTodos(n);
-        if (n.mi % 5 === 0) { renderWeather(); renderBots(); } // relatív idők frissítése
+        if (n.mi % 5 === 0) { renderWeather(); renderBots(n); } // relatív idők, napszak frissítése
       }
       checkNight(n);
-      checkAutoRead(n);
     } else if (n.s % 15 === 0) {
       checkNight(n);
     }
     setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
   }
 
-  document.addEventListener("pointerdown", function () {
-    // első koppintás után eltűnhet a „koppints egyszer” figyelmeztetés (helyben cseréljük,
-    // hogy a koppintott gomb ne cserélődjön ki a kattintás közben)
-    var warn = document.querySelector(".jarvis .j-meta.warn");
-    if (warn) { warn.className = "j-meta"; warn.innerHTML = autoHtml(settings()); }
-  }, { once: true });
   window.addEventListener("online", load);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
   var resizeTimer;
-  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { renderTodos(bpNow()); }, 200); });
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { renderTodos(bpNow()); fitCards(); }, 200); });
 
   tick();
   load();
-  setInterval(shift, Math.max(1, num(settings().shiftMinutes) || 3) * 60000);
+  (function scheduleShift() {
+    setTimeout(function () { shift(); scheduleShift(); }, Math.max(1, num(settings().shiftMinutes) || 3) * 60000);
+  })();
 })();
 </script>
 </body>
