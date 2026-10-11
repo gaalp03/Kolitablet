@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T16:31:24+02:00",
+  "updated": "2026-10-11T16:35:03+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -11,8 +11,8 @@
     "shiftMinutes": 3
   },
   "briefing": {
-    "morning": "Budapesten 17 fok és részben felhős idő van, az éjszakai eső elállt. A Tippmix szerint október 13-ig nincs jó meccs, kedd reggel jön az új elemzés.",
-    "evening": "Estére száraz, nyugodt idő marad. Holnap két dolgozat jön, hangkultúra és magyar, ma este érdemes átismételni őket."
+    "morning": "17 fok, részben felhős. Holnap 2 dolgozat.",
+    "evening": "Száraz este. Holnap hangkultúra és magyar dolgozat."
   },
   "weather": {
     "location": "Budapest",
@@ -54,8 +54,8 @@
       "icon": "grok",
       "status": "ok",
       "value": "Élő",
-      "line": "Megkérdeztem a botokat, a kijelző friss adatokkal megy.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Minden bot jelentett.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "tippmix",
@@ -64,8 +64,8 @@
       "icon": "tippmix",
       "status": "info",
       "value": "0 tipp",
-      "line": "Okt. 11–13. között nincs elég biztos meccs. Következő elemzés: kedd reggel.",
-      "updated": "2026-10-11T16:25:55+02:00"
+      "line": "Kedd reggelig nincs jó meccs.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "crazygames",
@@ -74,8 +74,8 @@
       "icon": "games",
       "status": "warn",
       "value": "5/15",
-      "line": "Phantom Crew és One More Vault asztalin 5/15, 9 kell. Ma este új buildek.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Asztalin 5/15, 9 kell.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "promo",
@@ -84,8 +84,8 @@
       "icon": "promo",
       "status": "idle",
       "value": "Szünetel",
-      "line": "A promó áll a javított buildekig, az IndieDB-oldalak élnek.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Áll a javított buildekig.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "tanulas",
@@ -94,8 +94,8 @@
       "icon": "learn",
       "status": "warn",
       "value": "2 dolgozat",
-      "line": "Ma: készülés a holnapi hangkultúra témazáróra és magyar röpire.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Hangkultúra + magyar holnap.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "eladas",
@@ -104,8 +104,8 @@
       "icon": "sell",
       "status": "ok",
       "value": "3 hirdetés",
-      "line": "Sony kamera Vinted+Jófogás, varrógép Jófogás; minicross eladva.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Kamera, varrógép; cross eladva.",
+      "updated": "2026-10-11T16:35:03+02:00"
     },
     {
       "id": "vasarlas",
@@ -114,17 +114,17 @@
       "icon": "buy",
       "status": "ok",
       "value": "–",
-      "line": "Nincs leadott rendelés vagy figyelt csomag.",
-      "updated": "2026-10-11T16:31:24+02:00"
+      "line": "Nincs csomag.",
+      "updated": "2026-10-11T16:35:03+02:00"
     }
   ],
   "todos": [
     {
-      "text": "Hangkultúra témazáró ismétlés (holnap 3. óra)",
+      "text": "Hangkultúra témazáró",
       "priority": "high"
     },
     {
-      "text": "Magyar röpdolgozat ismétlés: Janus Pannonius, Balassi (holnap 1. óra)",
+      "text": "Magyar röpi: Janus, Balassi",
       "priority": "high"
     }
   ]
