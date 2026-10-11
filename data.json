@@ -1,0 +1,112 @@
+{
+  "updated": "2026-10-11T07:05:00+02:00",
+  "settings": {
+    "name": "Péter",
+    "refreshMinutes": 5,
+    "autoRead": { "enabled": true, "morning": "07:30", "evening": "21:30" },
+    "speechRate": 1.0,
+    "night": { "start": "23:00", "end": "06:00" },
+    "shiftMinutes": 3
+  },
+  "briefing": {
+    "morning": "Ma délelőtt statisztika előadás, a Tippmix elemzés elkészült, és 3 új promóciót találtam.",
+    "evening": "Jó nap volt: a legtöbb teendő kész, holnapra esőt mondanak, vigyél esernyőt."
+  },
+  "weather": {
+    "location": "Budapest",
+    "temp": 14,
+    "feels_like": 12,
+    "condition": "Részben felhős",
+    "icon": "partly",
+    "high": 18,
+    "low": 9,
+    "precip_chance": 20,
+    "wind_kmh": 12,
+    "humidity": 64,
+    "forecast": [
+      { "day": "Holnap", "icon": "rain", "condition": "esős", "high": 15, "low": 8 },
+      { "day": "Kedd", "icon": "cloud", "condition": "borult", "high": 13, "low": 7 },
+      { "day": "Szerda", "icon": "sun", "condition": "napos", "high": 17, "low": 6 }
+    ]
+  },
+  "bots": [
+    {
+      "id": "grok",
+      "name": "Grok Bot",
+      "subtitle": "Napi összefoglaló",
+      "icon": "grok",
+      "status": "ok",
+      "value": "Kész",
+      "line": "Elkészült a mai összefoglaló: 5 hír, 2 kiemelt téma.",
+      "updated": "2026-10-11T06:30:00+02:00"
+    },
+    {
+      "id": "tippmix",
+      "name": "Tippmix",
+      "subtitle": "Kétnapos elemzés",
+      "icon": "tippmix",
+      "status": "ok",
+      "value": "6 tipp",
+      "line": "Hétfő–kedd elemzés kész, legjobb szorzó 2,35.",
+      "updated": "2026-10-11T06:00:00+02:00"
+    },
+    {
+      "id": "crazygames",
+      "name": "CrazyGames Stats",
+      "subtitle": "Játékok számai",
+      "icon": "games",
+      "status": "ok",
+      "value": "12 480",
+      "line": "Tegnapi játékmenet, +8% az előző naphoz képest.",
+      "updated": "2026-10-11T05:00:00+02:00"
+    },
+    {
+      "id": "promo",
+      "name": "Promó Figyelő",
+      "subtitle": "TikTok · Instagram",
+      "icon": "promo",
+      "status": "warn",
+      "value": "3 új",
+      "line": "3 új promóció, 1 ma 20:00-kor lejár.",
+      "updated": "2026-10-11T06:55:00+02:00"
+    },
+    {
+      "id": "tanulas",
+      "name": "Tanulás",
+      "subtitle": "Napi tanulás",
+      "icon": "learn",
+      "status": "running",
+      "value": "45 perc",
+      "line": "Ma: angol szókártyák és statisztika jegyzet.",
+      "updated": "2026-10-11T07:00:00+02:00"
+    },
+    {
+      "id": "eladas",
+      "name": "Eladás",
+      "subtitle": "Hirdetések",
+      "icon": "sell",
+      "status": "ok",
+      "value": "2 aktív",
+      "line": "1 új üzenet egy érdeklődőtől.",
+      "updated": "2026-10-11T06:40:00+02:00"
+    },
+    {
+      "id": "vasarlas",
+      "name": "Vásárlás",
+      "subtitle": "Figyelt termékek",
+      "icon": "buy",
+      "status": "idle",
+      "value": "–",
+      "line": "Nincs árváltozás a figyelt termékeknél.",
+      "updated": "2026-10-10T22:00:00+02:00"
+    }
+  ],
+  "todos": [
+    { "time": "08:30", "text": "Reggeli edzés", "done": true },
+    { "time": "10:00", "text": "Statisztika előadás – B épület", "priority": "high" },
+    { "time": "14:00", "text": "Csomag átvétele a portán", "kind": "reminder" },
+    { "time": "19:00", "text": "Tippmix szelvény ellenőrzése" },
+    { "text": "Mosás" },
+    { "time": "22:30", "text": "Telefon töltőre", "kind": "reminder" }
+  ]
+}

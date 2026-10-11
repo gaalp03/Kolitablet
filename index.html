@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#05080f">
+<title>Koli Jarvis</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --bg: #05080f;
+    --card: rgba(13, 20, 36, 0.74);
+    --card-border: rgba(125, 180, 255, 0.13);
+    --text: #e9f2ff;
+    --muted: #93a7c6;
+    --dim: #61728f;
+    --accent: #4cc9ff;
+    --accent-2: #8a7dff;
+    --ok: #38d996;
+    --warn: #ffb547;
+    --err: #ff5d6c;
+    --run: #4cc9ff;
+    --idle: #6b7a93;
+    --radius: 1.2rem;
+  }
+
+  /* 1 rem = 16px 1280×800-on, 24px 1920×1200-on – minden arányosan skálázódik */
+  html { font-size: min(1.25vw, 2vh); }
+  html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--text); }
+  body {
+    font-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button { font: inherit; color: inherit; }
+  svg { display: block; }
+
+  /* ---------- Animált háttér ---------- */
+  .bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+  .blob {
+    position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%;
+    will-change: transform; opacity: 0.9;
+  }
+  .blob.b1 { left: -25vmax; top: -30vmax; background: radial-gradient(circle, rgba(56, 160, 255, 0.20), transparent 62%); animation: drift1 70s ease-in-out infinite alternate; }
+  .blob.b2 { right: -30vmax; bottom: -35vmax; background: radial-gradient(circle, rgba(124, 92, 255, 0.17), transparent 62%); animation: drift2 90s ease-in-out infinite alternate; }
+  .blob.b3 { left: 30vw; top: 20vh; width: 50vmax; height: 50vmax; background: radial-gradient(circle, rgba(0, 220, 200, 0.08), transparent 60%); animation: drift3 110s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(18vw, 22vh) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-22vw, -18vh) scale(1.1); } }
+  @keyframes drift3 { 0% { transform: translate(-10vw, 10vh); } 100% { transform: translate(15vw, -15vh) scale(1.2); } }
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(120, 170, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 170, 255, 0.045) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+  }
+  .sweep {
+    position: absolute; left: 0; right: 0; height: 30vh; top: -30vh;
+    background: linear-gradient(180deg, transparent, rgba(76, 201, 255, 0.035), transparent);
+    animation: sweep 18s linear infinite;
+  }
+  @keyframes sweep { to { transform: translateY(160vh); } }
+
+  /* ---------- Elrendezés ---------- */
+  #app {
+    position: fixed; inset: 0; z-index: 1;
+    padding: 1.4rem 1.6rem;
+    display: grid;
+    grid-template-columns: 29fr 24fr 20fr;
+    grid-template-rows: 17rem minmax(0, 1fr);
+    gap: 1.1rem;
+    transition: transform 8s ease-in-out;
+  }
+  .card {
+    position: relative; min-height: 0; overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+  .card::before {
+    content: ""; position: absolute; left: 1.2rem; right: 1.2rem; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(76, 201, 255, 0.45), transparent);
+  }
+  .label {
+    font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+  }
+  .sample-chip {
+    display: none; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em;
+    color: #1b1200; background: var(--warn); border-radius: 0.4rem; padding: 0.12rem 0.45rem;
+  }
+  body.sample .sample-chip { display: inline-block; }
+
+  /* ---------- Óra ---------- */
+  .clock { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0.4rem; min-width: 0; }
+  .greet {
+    font-size: 2.1rem; font-weight: 600; line-height: 1.2;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .time {
+    font-size: 8.2rem; font-weight: 300; line-height: 0.95; letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums; margin: 0.2rem 0 0.35rem -0.3rem;
+    text-shadow: 0 0 2.5rem rgba(76, 201, 255, 0.25);
+    white-space: nowrap;
+  }
+  .time .sec { font-size: 2.6rem; color: var(--accent); margin-left: 0.6rem; vertical-align: 0.4em; letter-spacing: 0; opacity: 0.9; }
+  .time .colon { opacity: 0.75; }
+  .date { font-size: 1.7rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .date b { font-weight: 700; }
+  .date span { color: var(--muted); }
+  .brief {
+    margin-top: 0.55rem; font-size: 1.15rem; line-height: 1.35; color: var(--muted);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .brief.sample-warning {
+    color: #1b1200; background: var(--warn); border-radius: 0.6rem; padding: 0.35rem 0.7rem;
+    font-weight: 700; -webkit-line-clamp: 2;
+  }
+
+  /* ---------- Időjárás ---------- */
+  .weather { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 0.55rem; }
+  .card-head { display: flex; align-items: center; gap: 0.6rem; }
+  .card-head .grow { flex: 1; }
+  .wx-now { display: flex; align-items: center; gap: 0.9rem; min-height: 0; }
+  .wx-icon { width: 5.2rem; height: 5.2rem; flex: none; }
+  .wx-icon svg { width: 100%; height: 100%; }
+  .temp { font-size: 4.6rem; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+  .temp small { font-size: 2rem; color: var(--muted); vertical-align: 1.6rem; }
+  .cond { font-size: 1.25rem; color: var(--text); line-height: 1.2; min-width: 0; }
+  .cond .feels { display: block; font-size: 1rem; color: var(--muted); margin-top: 0.2rem; }
+  .wx-meta { display: flex; gap: 1.1rem; font-size: 1.05rem; color: var(--muted); white-space: nowrap; }
+  .wx-meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
+  .wx-meta svg { width: 1.1rem; height: 1.1rem; }
+  .wx-meta b { color: var(--text); font-weight: 600; }
+  .forecast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: auto; }
+  .fc { background: rgba(255, 255, 255, 0.035); border-radius: 0.7rem; padding: 0.35rem 0.5rem 0.4rem; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; min-width: 0; }
+  .fc .row2 { display: flex; align-items: center; gap: 0.4rem; }
+  .fc svg { width: 1.7rem; height: 1.7rem; flex: none; }
+  .fc .d { font-size: 0.9rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fc .t { font-size: 1.05rem; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .fc .t span { color: var(--muted); font-weight: 400; }
+
+  .ic-sun { color: #ffc857; }
+  .ic-moon { color: #c9d6ff; }
+  .ic-cloud { color: #b9c7de; }
+  .ic-rain { color: #6cb8ff; }
+  .ic-snow { color: #e4f1ff; }
+  .ic-storm { color: #ffd166; }
+  .ic-fog { color: #9fb0c8; }
+
+  /* ---------- Botok ---------- */
+  .bots { grid-column: 1 / span 2; grid-row: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 1.1rem; min-height: 0; }
+  .bot { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.05rem; --s: var(--idle); }
+  .bot[data-status="ok"] { --s: var(--ok); }
+  .bot[data-status="warn"] { --s: var(--warn); }
+  .bot[data-status="error"] { --s: var(--err); }
+  .bot[data-status="running"] { --s: var(--run); }
+  .bot::after {
+    content: ""; position: absolute; left: -3rem; top: -3rem; width: 9rem; height: 9rem; border-radius: 50%;
+    background: radial-gradient(circle, var(--s), transparent 70%); opacity: 0.14; pointer-events: none;
+  }
+  .bot-head { display: flex; align-items: center; gap: 0.7rem; min-width: 0; }
+  .bot-icon {
+    width: 2.5rem; height: 2.5rem; flex: none; border-radius: 0.75rem; display: grid; place-items: center;
+    background: rgba(76, 201, 255, 0.1); color: var(--accent); font-size: 1.6rem; line-height: 1;
+    border: 1px solid rgba(76, 201, 255, 0.18);
+  }
+  .bot-icon svg { width: 1.55rem; height: 1.55rem; }
+  .bot-title { min-width: 0; flex: 1; }
+  .bot-name { font-size: 1.28rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bot-sub { font-size: 0.9rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bot-value { font-size: 2rem; font-weight: 700; line-height: 1.05; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+  .bot-line {
+    font-size: 1.08rem; line-height: 1.3; color: #c3d2e8; min-height: 0;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .bot-foot { margin-top: auto; display: flex; align-items: center; gap: 0.45rem; font-size: 0.9rem; color: var(--dim); white-space: nowrap; }
+  .bot-foot .st { color: var(--s); font-weight: 700; }
+  .dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--s); box-shadow: 0 0 0.6rem var(--s); flex: none; }
+  .bot[data-status="running"] .dot, .bot[data-status="error"] .dot { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.35; transform: scale(0.8); } }
+  .bot-head .sample-chip { flex: none; }
+  .bot-name.long { font-size: 1.12rem; }
+
+  /* ---------- Jarvis vezérlő kártya ---------- */
+  .jarvis { display: flex; flex-direction: column; gap: 0.5rem; background: linear-gradient(160deg, rgba(20, 40, 72, 0.85), rgba(16, 18, 44, 0.85)); }
+  .orb { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 50%; position: relative; }
+  .orb::before, .orb::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+  .orb::before { background: conic-gradient(from 0deg, var(--accent), transparent 40%, var(--accent-2), transparent 85%, var(--accent)); animation: spin 6s linear infinite;
+    -webkit-mask: radial-gradient(circle, transparent 55%, #000 57%); mask: radial-gradient(circle, transparent 55%, #000 57%); }
+  .orb::after { inset: 32%; background: var(--accent); box-shadow: 0 0 1rem var(--accent); animation: breathe 4s ease-in-out infinite; }
+  body.speaking .orb::before { animation-duration: 1.2s; }
+  body.speaking .orb::after { animation-duration: 0.8s; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes breathe { 50% { transform: scale(0.7); opacity: 0.6; } }
+  .speak-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    border: 0; border-radius: 0.9rem; padding: 0.75rem 0.8rem; font-size: 1.35rem; font-weight: 700; cursor: pointer;
+    color: #04121c; background: linear-gradient(90deg, var(--accent), #7fdcff);
+    box-shadow: 0 0.4rem 1.4rem rgba(76, 201, 255, 0.3);
+  }
+  .speak-btn svg { width: 1.6rem; height: 1.6rem; }
+  .speak-btn:active { transform: scale(0.97); }
+  body.speaking .speak-btn { background: linear-gradient(90deg, #ff8a8a, var(--err)); color: #fff; box-shadow: 0 0.4rem 1.4rem rgba(255, 93, 108, 0.35); }
+  .j-meta { font-size: 0.98rem; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .j-meta b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .j-meta.warn { color: var(--warn); white-space: normal; }
+  .j-meta.err { color: var(--err); }
+  .icon-btn {
+    width: 2.6rem; height: 2.6rem; border-radius: 0.8rem; border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.05); display: grid; place-items: center; cursor: pointer; color: var(--muted); flex: none;
+  }
+  .icon-btn svg { width: 1.4rem; height: 1.4rem; }
+  .src-dot { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.35rem; vertical-align: 0.05em; background: var(--ok); }
+  .src-dot.sample, .src-dot.stale { background: var(--warn); }
+
+  /* ---------- Teendők ---------- */
+  .todos { grid-column: 3; grid-row: 1 / span 2; display: flex; flex-direction: column; }
+  .todos .card-head { margin-bottom: 0.4rem; }
+  .todos h2 { margin: 0; font-size: 1.45rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  body.sample .count .w { display: none; }
+  .count { white-space: nowrap; flex: none; font-size: 0.9rem; font-weight: 700; color: var(--accent); background: rgba(76, 201, 255, 0.12); padding: 0.15rem 0.6rem; border-radius: 1rem; }
+  .todo-list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0; overflow: hidden; }
+  .todo {
+    display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.7rem 0.2rem 0.7rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06); position: relative;
+  }
+  .todo.high::before { content: ""; position: absolute; left: 0; top: 0.75rem; bottom: 0.75rem; width: 0.22rem; border-radius: 0.2rem; background: var(--warn); }
+  .todo.next { background: linear-gradient(90deg, rgba(76, 201, 255, 0.12), transparent); border-radius: 0.6rem; }
+  .chk { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.1rem; border-radius: 50%; border: 2px solid var(--dim); display: grid; place-items: center; color: transparent; }
+  .chk svg { width: 1rem; height: 1rem; }
+  .todo.done .chk { border-color: var(--ok); background: var(--ok); color: #04140c; }
+  .todo.reminder .chk { border: 0; color: var(--accent-2); }
+  .todo.reminder .chk svg { width: 1.45rem; height: 1.45rem; }
+  .todo-body { min-width: 0; flex: 1; }
+  .todo-text { font-size: 1.3rem; line-height: 1.25; overflow-wrap: anywhere; }
+  .todo.done .todo-text { color: var(--dim); text-decoration: line-through; }
+  .todo-time { display: inline-block; font-size: 0.95rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; margin-bottom: 0.15rem; }
+  .todo-time .tag { color: #04121c; background: var(--accent); border-radius: 0.35rem; padding: 0 0.35rem; margin-left: 0.35rem; font-size: 0.8rem; letter-spacing: 0.04em; }
+  .todo.done .todo-time { color: var(--dim); }
+  .todo-more { font-size: 1.05rem; color: var(--muted); padding: 0.6rem 0.6rem 0; }
+  .empty { color: var(--muted); font-size: 1.2rem; padding: 1rem 0.6rem; }
+
+  /* ---------- Éjszakai halványítás, beállítások, toast ---------- */
+  #night { position: fixed; inset: 0; z-index: 50; background: #000; opacity: 0; pointer-events: none; transition: opacity 30s ease; }
+  body.night #night { opacity: 0.88; pointer-events: auto; }
+  body.night .blob, body.night .sweep, body.night .orb::before, body.night .orb::after { animation-play-state: paused; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 1.6rem; z-index: 60; transform: translate(-50%, 200%);
+    background: rgba(10, 16, 30, 0.96); border: 1px solid var(--card-border); color: var(--text);
+    padding: 0.8rem 1.3rem; border-radius: 0.9rem; font-size: 1.1rem; max-width: 70vw; text-align: center;
+    transition: transform 0.4s ease; box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.5);
+  }
+  .toast.show { transform: translate(-50%, 0); }
+
+  .modal { position: fixed; inset: 0; z-index: 70; display: none; place-items: center; background: rgba(0, 0, 0, 0.6); }
+  .modal.open { display: grid; }
+  .panel { width: 36rem; max-width: 92vw; background: #0d1526; border: 1px solid var(--card-border); border-radius: 1.2rem; padding: 1.5rem 1.6rem; box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.6); }
+  .panel h3 { margin: 0 0 1rem; font-size: 1.6rem; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; font-size: 1.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+  .row input[type="time"], .row select {
+    font: inherit; font-size: 1.2rem; color: var(--text); background: #18233a; border: 1px solid var(--card-border);
+    border-radius: 0.6rem; padding: 0.35rem 0.6rem; color-scheme: dark;
+  }
+  .row input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: var(--accent); }
+  .row input[type="range"] { width: 12rem; accent-color: var(--accent); }
+  .panel .hint { font-size: 0.95rem; color: var(--muted); margin: 0.8rem 0 0; line-height: 1.4; }
+  .btns { display: flex; gap: 0.7rem; justify-content: flex-end; margin-top: 1.2rem; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--card-border); background: rgba(255, 255, 255, 0.06); border-radius: 0.7rem; padding: 0.55rem 1.1rem; font-size: 1.1rem; cursor: pointer; }
+  .btn.primary { background: var(--accent); color: #04121c; border-color: transparent; font-weight: 700; }
+
+  /* Álló tájolás esetére egy egyszerű egyoszlopos tartalék */
+  @media (orientation: portrait) {
+    html { font-size: min(2vw, 1.5vh); }
+    #app { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+    .clock { grid-column: 1 / span 2; grid-row: 1; }
+    .weather { grid-column: 1 / span 2; grid-row: 2; }
+    .bots { grid-column: 1 / span 2; grid-row: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .todos { grid-column: 1 / span 2; grid-row: 4; max-height: 30vh; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="grid-lines"></div><div class="sweep"></div>
+  </div>
+
+  <main id="app">
+    <section class="clock">
+      <div class="greet" id="greet">Jó napot</div>
+      <div class="time" id="time">--<span class="colon">:</span>--<span class="sec">--</span></div>
+      <div class="date" id="date">&nbsp;</div>
+      <div class="brief" id="brief"></div>
+    </section>
+
+    <section class="card weather" id="weather"></section>
+
+    <section class="bots" id="bots"></section>
+
+    <section class="card todos">
+      <div class="card-head">
+        <h2 class="grow">Mai teendők</h2>
+        <span class="sample-chip">PÉLDA</span>
+        <span class="count" id="todoCount">0</span>
+      </div>
+      <ul class="todo-list" id="todoList"></ul>
+    </section>
+  </main>
+
+  <div id="night" title="Koppints a felébresztéshez"></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="settings">
+    <div class="panel">
+      <h3>Felolvasás beállításai</h3>
+      <div class="row"><label for="sEnabled">Automatikus felolvasás</label><input type="checkbox" id="sEnabled"></div>
+      <div class="row"><label for="sMorning">Reggeli időpont</label><input type="time" id="sMorning"></div>
+      <div class="row"><label for="sEvening">Esti időpont</label><input type="time" id="sEvening"></div>
+      <div class="row"><label for="sRate">Beszéd sebessége <b id="sRateVal">1.0</b></label><input type="range" id="sRate" min="0.7" max="1.4" step="0.05"></div>
+      <div class="row"><label for="sVoice">Hang</label><select id="sVoice"></select></div>
+      <p class="hint">Ezek a beállítások csak ezen az eszközön tárolódnak, és felülírják a data.json „settings” részét. A „Visszaállítás” törli őket.</p>
+      <div class="btns">
+        <button class="btn" id="sReset">Visszaállítás</button>
+        <button class="btn" id="sTest">Próba</button>
+        <button class="btn" id="sCancel">Mégse</button>
+        <button class="btn primary" id="sSave">Mentés</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ================= Alapbeállítások ================= */
+  var TZ = "Europe/Budapest";
+  var DATA_URL = "data.json";
+  var DEFAULT_SETTINGS = {
+    name: "Péter",
+    refreshMinutes: 5,
+    autoRead: { enabled: true, morning: "07:30", evening: "21:30" },
+    speechRate: 1.0,
+    voice: "",
+    night: { start: "23:00", end: "06:00" },
+    shiftMinutes: 3
+  };
+  var DEFAULT_BOTS = [
+    { id: "grok", name: "Grok Bot", subtitle: "Napi összefoglaló", icon: "grok" },
+    { id: "tippmix", name: "Tippmix", subtitle: "Kétnapos elemzés", icon: "tippmix" },
+    { id: "crazygames", name: "CrazyGames Stats", subtitle: "Játékok számai", icon: "games" },
+    { id: "promo", name: "Promó Figyelő", subtitle: "TikTok · Instagram", icon: "promo" },
+    { id: "tanulas", name: "Tanulás", subtitle: "Napi tanulás", icon: "learn" },
+    { id: "eladas", name: "Eladás", subtitle: "Hirdetések", icon: "sell" },
+    { id: "vasarlas", name: "Vásárlás", subtitle: "Figyelt termékek", icon: "buy" }
+  ];
+  var STATUS_LABEL = { ok: "Rendben", warn: "Figyelem", error: "Hiba", running: "Fut", idle: "Szünetel" };
+
+  /* ================= Ikonok (inline SVG) ================= */
+  var CLOUD = "M7 18h10a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 7.1 9.5 4.25 4.25 0 0 0 7 18z";
+  var ICONS = {
+    // bot ikonok
+    grok: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+    tippmix: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4.3 3.1-1.6 5H9.3l-1.6-5z"/><path d="M12 3v4.5M16.3 10.6l4.4-1.4M14.7 15.6l2.7 3.7M9.3 15.6l-2.7 3.7M7.7 10.6L3.3 9.2"/>',
+    games: '<path d="M7 8h10a4.5 4.5 0 0 1 4.4 5.4l-.8 3.9a2.3 2.3 0 0 1-3.9 1.1L14.5 16h-5l-2.2 2.4a2.3 2.3 0 0 1-3.9-1.1l-.8-3.9A4.5 4.5 0 0 1 7 8z"/><path d="M7.5 10.5v3.5M5.75 12.25h3.5"/><path d="M15.5 11.2h.01M17.8 13.5h.01" stroke-width="2.6"/>',
+    promo: '<path d="M3 10v4a1 1 0 0 0 1 1h3l7 4V5L7 9H4a1 1 0 0 0-1 1z"/><path d="M7 15l1.5 5H11l-1.3-4.3"/><path d="M17.5 9a4 4 0 0 1 0 6M20 6.5a7.5 7.5 0 0 1 0 11"/>',
+    learn: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 9v6"/>',
+    sell: '<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    buy: '<path d="M2.5 3.5h3l2.4 11.2a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L21 7H6.4"/><circle cx="10" cy="20" r="1.4"/><circle cx="17.5" cy="20" r="1.4"/>',
+    bot: '<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4"/><circle cx="12" cy="3.5" r="1"/><path d="M9 14h.01M15 14h.01" stroke-width="2.8"/>',
+    // felület
+    speaker: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',
+    sliders: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5" stroke-width="3"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+    drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+    wind: '<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8"/>',
+    pin: '<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+    // időjárás
+    sun: '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+    moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    cloud: '<path d="' + CLOUD + '"/>',
+    partly: '<path d="M8 2.5V4M2.5 8H4M4.1 4.1l1 1M11.9 4.1l-1 1"/><path d="M4.8 11.3A3.6 3.6 0 1 1 11.3 6.5"/><g transform="translate(2.5 2) scale(.9)"><path d="' + CLOUD + '"/></g>',
+    "partly-night": '<g transform="translate(-.5 -.5) scale(.6)"><path stroke-width="3" d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></g><g transform="translate(2.5 2) scale(.9)"><path d="' + CLOUD + '"/></g>',
+    rain: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M8.5 18.5l-1 2.5M12.5 18.5l-1 2.5M16.5 18.5l-1 2.5"/>',
+    snow: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M8 19.5h.01M12 21h.01M16 19.5h.01M10 22.5h.01M14 22.5h.01" stroke-width="2.6"/>',
+    storm: '<g transform="translate(0 -3)"><path d="' + CLOUD + '"/></g><path d="M12.5 14l-2.5 4h3.5l-2.5 4"/>',
+    fog: '<g transform="translate(0 -4)"><path d="' + CLOUD + '"/></g><path d="M4 17.5h16M6 21h12"/>'
+  };
+  var WX_CLASS = { sun: "ic-sun", moon: "ic-moon", cloud: "ic-cloud", partly: "ic-sun", "partly-night": "ic-moon", rain: "ic-rain", snow: "ic-snow", storm: "ic-storm", fog: "ic-fog", wind: "ic-cloud" };
+  var BOT_ICON_ALIAS = { "grok-bot": "grok", crazygames: "games", stats: "games", promofigyelo: "promo", tanulas: "learn", eladas: "sell", vasarlas: "buy" };
+
+  function svg(name, cls) {
+    var body = ICONS[name];
+    if (!body) return "";
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"' +
+      (cls ? ' class="' + cls + '"' : "") + ' aria-hidden="true">' + body + "</svg>";
+  }
+  function iconHtml(icon) {
+    // Ismert ikonnév → SVG, egyébként (pl. emoji) szövegként jelenik meg
+    var key = String(icon || "bot");
+    var k = ICONS[key] ? key : BOT_ICON_ALIAS[key.toLowerCase()];
+    if (k && ICONS[k]) return svg(k);
+    return "<span>" + esc(key) + "</span>";
+  }
+
+  /* ================= Segédfüggvények ================= */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function isObj(o) { return o && typeof o === "object" && !Array.isArray(o); }
+  function merge(base, over) {
+    var out = {};
+    var k;
+    for (k in base) out[k] = base[k];
+    if (isObj(over)) for (k in over) {
+      if (over[k] === undefined || over[k] === null) continue;
+      out[k] = isObj(base[k]) && isObj(over[k]) ? merge(base[k], over[k]) : over[k];
+    }
+    return out;
+  }
+  function parseHM(s) {
+    var m = /^(\d{1,2}):(\d{2})/.exec(String(s || ""));
+    return m ? (+m[1]) * 60 + (+m[2]) : null;
+  }
+  function inWindow(min, start, end) {
+    if (start == null || end == null) return false;
+    return start <= end ? (min >= start && min < end) : (min >= start || min < end);
+  }
+  function num(v) { var n = Number(v); return isFinite(n) ? n : null; }
+  function deg(v) { var n = num(v); return n == null ? "–" : Math.round(n) + "°"; }
+  function cap(s) { s = String(s || ""); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function store(key, val) {
+    try {
+      if (val === undefined) return JSON.parse(localStorage.getItem(key) || "null");
+      if (val === null) localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) { return null; }
+  }
+
+  /* ================= Idő (Europe/Budapest) ================= */
+  var fmtParts, fmtLong, fmtShort;
+  try {
+    fmtParts = new Intl.DateTimeFormat("hu-HU", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23", weekday: "long" });
+    fmtLong = new Intl.DateTimeFormat("hu-HU", { timeZone: TZ, year: "numeric", month: "long", day: "numeric" });
+    fmtShort = new Intl.DateTimeFormat("hu-HU", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  } catch (e) { fmtParts = null; }
+  var WEEKDAYS = ["vasárnap", "hétfő", "kedd", "szerda", "csütörtök", "péntek", "szombat"];
+
+  function bpNow(date) {
+    var d = date || new Date();
+    if (!fmtParts) {
+      return { y: d.getFullYear(), mo: d.getMonth() + 1, d: d.getDate(), h: d.getHours(), mi: d.getMinutes(), s: d.getSeconds(),
+        weekday: WEEKDAYS[d.getDay()], long: d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + "." };
+    }
+    var p = {};
+    fmtParts.formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+    return { y: +p.year, mo: +p.month, d: +p.day, h: (+p.hour) % 24, mi: +p.minute, s: +p.second, weekday: p.weekday, long: fmtLong.format(d) };
+  }
+  function dayKey(n) { return n.y + "-" + pad(n.mo) + "-" + pad(n.d); }
+  function hhmm(date) { return fmtShort ? fmtShort.format(date) : pad(date.getHours()) + ":" + pad(date.getMinutes()); }
+  function ago(date) {
+    if (!(date instanceof Date) || isNaN(date)) return "";
+    var s = (Date.now() - date.getTime()) / 1000;
+    if (s < 0) return hhmm(date);
+    if (s < 90) return "most";
+    if (s < 3600) return Math.round(s / 60) + " perce";
+    if (s < 86400) return Math.floor(s / 3600) + " órája";
+    return Math.floor(s / 86400) + " napja";
+  }
+  function greeting(h) {
+    if (h >= 4 && h < 10) return "Jó reggelt";
+    if (h >= 10 && h < 18) return "Jó napot";
+    if (h >= 18 && h < 22) return "Jó estét";
+    return "Jó éjszakát";
+  }
+  function isMorningHalf(h) { return h >= 3 && h < 14; }
+
+  /* ================= Állapot ================= */
+  var state = {
+    data: null,
+    source: "none",      // live | sample | stale
+    fetchedAt: null,
+    lastError: "",
+    wakeUntil: 0,
+    lastMinute: -1
+  };
+
+  function settings() {
+    var fromData = state.data && state.data.settings;
+    return merge(merge(DEFAULT_SETTINGS, fromData), store("jarvis.settings") || {});
+  }
+
+  /* ================= Beépített példaadat ================= */
+  function makeSample() {
+    var now = Date.now();
+    function minsAgo(m) { return new Date(now - m * 60000).toISOString(); }
+    return {
+      updated: minsAgo(4),
+      settings: { name: "Péter" },
+      briefing: {
+        morning: "Ez csak példa: ma 3 nyitott teendő vár, a Tippmix elemzés elkészült.",
+        evening: "Ez csak példa: a nap jól alakult, holnapra esőt mondanak."
+      },
+      weather: {
+        location: "Budapest", temp: 14, feels_like: 12, condition: "Részben felhős", icon: "partly",
+        high: 18, low: 9, precip_chance: 20, wind_kmh: 12, humidity: 64,
+        forecast: [
+          { day: "Holnap", icon: "rain", condition: "esős", high: 15, low: 8 },
+          { day: "Kedd", icon: "cloud", condition: "borult", high: 13, low: 7 },
+          { day: "Szerda", icon: "sun", condition: "napos", high: 17, low: 6 }
+        ]
+      },
+      bots: [
+        { id: "grok", name: "Grok Bot", subtitle: "Napi összefoglaló", icon: "grok", status: "ok", value: "Kész", line: "Elkészült a mai összefoglaló: 5 hír, 2 kiemelt téma.", updated: minsAgo(38) },
+        { id: "tippmix", name: "Tippmix", subtitle: "Kétnapos elemzés", icon: "tippmix", status: "ok", value: "6 tipp", line: "Hétvégi elemzés kész, legjobb szorzó 2,35.", updated: minsAgo(95) },
+        { id: "crazygames", name: "CrazyGames Stats", subtitle: "Játékok számai", icon: "games", status: "ok", value: "12 480", line: "Tegnapi játékmenet, +8% az előző naphoz képest.", updated: minsAgo(60) },
+        { id: "promo", name: "Promó Figyelő", subtitle: "TikTok · Instagram", icon: "promo", status: "warn", value: "3 új", line: "3 új promóció, 1 ma 20:00-kor lejár.", updated: minsAgo(12) },
+        { id: "tanulas", name: "Tanulás", subtitle: "Napi tanulás", icon: "learn", status: "running", value: "45 perc", line: "Ma: angol szókártyák és statisztika jegyzet.", updated: minsAgo(20) },
+        { id: "eladas", name: "Eladás", subtitle: "Hirdetések", icon: "sell", status: "ok", value: "2 aktív", line: "1 új üzenet egy érdeklődőtől.", updated: minsAgo(150) },
+        { id: "vasarlas", name: "Vásárlás", subtitle: "Figyelt termékek", icon: "buy", status: "idle", value: "–", line: "Nincs árváltozás a figyelt termékeknél.", updated: minsAgo(300) }
+      ],
+      todos: [
+        { time: "08:30", text: "Reggeli edzés", done: true },
+        { time: "10:00", text: "Statisztika előadás – B épület", priority: "high" },
+        { time: "14:00", text: "Csomag átvétele a portán", kind: "reminder" },
+        { time: "19:00", text: "Tippmix szelvény ellenőrzése" },
+        { text: "Mosás" },
+        { time: "22:30", text: "Telefon töltőre", kind: "reminder" }
+      ]
+    };
+  }
+
+  /* ================= Adatbetöltés ================= */
+  function load() {
+    var url = DATA_URL + (DATA_URL.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now();
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+    return fetch(url, { cache: "no-store", signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (json) {
+        if (!isObj(json)) throw new Error("A data.json nem objektum");
+        state.data = json;
+        state.source = "live";
+        state.fetchedAt = new Date();
+        state.lastError = "";
+      })
+      .catch(function (err) {
+        state.lastError = (err && err.name === "AbortError") ? "időtúllépés" : (err && err.message) || String(err);
+        if (state.source === "live" || state.source === "stale") {
+          state.source = "stale"; // a legutóbbi valódi adat marad kint
+        } else {
+          state.data = makeSample();
+          state.source = "sample";
+          state.fetchedAt = new Date();
+        }
+        if (window.console) console.warn("data.json betöltése sikertelen:", state.lastError);
+      })
+      .then(function () {
+        clearTimeout(timer);
+        renderAll();
+        scheduleRefresh();
+      });
+  }
+  var refreshTimer = null;
+  function scheduleRefresh() {
+    clearTimeout(refreshTimer);
+    var mins = num(settings().refreshMinutes) || 5;
+    refreshTimer = setTimeout(load, Math.max(1, mins) * 60000);
+  }
+
+  /* ================= Megjelenítés ================= */
+  var WMO = [
+    [[0], "sun", "Derült"], [[1], "partly", "Többnyire derült"], [[2], "partly", "Részben felhős"], [[3], "cloud", "Borult"],
+    [[45, 48], "fog", "Ködös"], [[51, 53, 55, 56, 57], "rain", "Szitálás"], [[61, 63, 65, 66, 67], "rain", "Eső"],
+    [[71, 73, 75, 77], "snow", "Havazás"], [[80, 81, 82], "rain", "Zápor"], [[85, 86], "snow", "Hózápor"], [[95, 96, 99], "storm", "Zivatar"]
+  ];
+  function wmo(code) {
+    for (var i = 0; i < WMO.length; i++) if (WMO[i][0].indexOf(+code) >= 0) return { icon: WMO[i][1], text: WMO[i][2] };
+    return null;
+  }
+  function wxIcon(w, isNow) {
+    var icon = w && w.icon;
+    var fromCode = w && w.code != null ? wmo(w.code) : null;
+    if (!icon && fromCode) icon = fromCode.icon;
+    if (!ICONS[icon]) icon = "cloud";
+    if (isNow) {
+      var h = bpNow().h;
+      var dark = h >= 19 || h < 6;
+      if (dark && icon === "sun") icon = "moon";
+      if (dark && icon === "partly") icon = "partly-night";
+    }
+    return icon;
+  }
+  function wxText(w) {
+    if (!w) return "";
+    if (w.condition) return w.condition;
+    var c = w.code != null ? wmo(w.code) : null;
+    return c ? c.text : "";
+  }
+
+  function renderClock(n) {
+    $("time").innerHTML = pad(n.h) + '<span class="colon">:</span>' + pad(n.mi) + '<span class="sec">' + pad(n.s) + "</span>";
+  }
+
+  function renderHeader(n) {
+    var s = settings();
+    $("greet").textContent = greeting(n.h) + ", " + (s.name || "Péter");
+    $("date").innerHTML = "<b>" + esc(cap(n.weekday)) + "</b> <span>·</span> " + esc(n.long);
+    var brief = $("brief");
+    if (state.source === "sample") {
+      brief.className = "brief sample-warning";
+      brief.textContent = "⚠ PÉLDA ADATOK – a data.json nem tölthető be, ez csak minta!";
+      return;
+    }
+    var b = (state.data && state.data.briefing) || {};
+    var text = typeof b === "string" ? b : (isMorningHalf(n.h) ? (b.morning || b.evening) : (b.evening || b.morning));
+    brief.className = "brief";
+    brief.textContent = text || "";
+  }
+
+  function renderWeather() {
+    var w = (state.data && state.data.weather) || {};
+    var icon = wxIcon(w, true);
+    var fc = Array.isArray(w.forecast) ? w.forecast.slice(0, 3) : [];
+    var html = '<div class="card-head"><span class="label grow">' + svg("pin").replace("<svg", '<svg style="display:inline-block;width:1rem;height:1rem;vertical-align:-0.12em;margin-right:.3rem"') +
+      esc(w.location || "Budapest") + '</span><span class="sample-chip">PÉLDA</span></div>' +
+      '<div class="wx-now"><div class="wx-icon ' + (WX_CLASS[icon] || "") + '">' + svg(icon) + "</div>" +
+      '<div class="temp">' + (num(w.temp) == null ? "–" : Math.round(num(w.temp))) + "<small>°C</small></div>" +
+      '<div class="cond">' + esc(wxText(w) || "Nincs adat") +
+      (num(w.feels_like) != null ? '<span class="feels">Hőérzet ' + deg(w.feels_like) + "</span>" : "") + "</div></div>" +
+      '<div class="wx-meta">' +
+      '<span>↑<b>' + deg(w.high) + "</b> ↓<b>" + deg(w.low) + "</b></span>" +
+      (num(w.precip_chance) != null ? "<span>" + svg("drop") + "<b>" + Math.round(num(w.precip_chance)) + "%</b></span>" : "") +
+      (num(w.wind_kmh) != null ? "<span>" + svg("wind") + "<b>" + Math.round(num(w.wind_kmh)) + "</b> km/h</span>" : "") +
+      "</div>";
+    if (fc.length) {
+      html += '<div class="forecast">' + fc.map(function (f) {
+        var ic = wxIcon(f, false);
+        return '<div class="fc"><div class="d">' + esc(f.day || "") + '</div><div class="row2"><span class="' + (WX_CLASS[ic] || "") + '">' +
+          svg(ic) + '</span><div class="t">' + deg(f.high) + " <span>" + deg(f.low) + "</span></div></div></div>";
+      }).join("") + "</div>";
+    }
+    $("weather").innerHTML = html;
+  }
+
+  function botList() {
+    var bots = state.data && Array.isArray(state.data.bots) && state.data.bots.length ? state.data.bots : null;
+    if (bots) return bots;
+    return DEFAULT_BOTS.map(function (b) { return merge(b, { status: "idle", value: "–", line: "Nincs adat" }); });
+  }
+
+  function renderBots() {
+    var html = botList().map(function (b) {
+      var st = STATUS_LABEL[b.status] ? b.status : "idle";
+      var upd = b.updated ? new Date(b.updated) : null;
+      return '<article class="card bot" data-status="' + st + '">' +
+        '<div class="bot-head"><div class="bot-icon">' + iconHtml(b.icon || b.id) + "</div>" +
+        '<div class="bot-title bot-sub">' + esc(b.subtitle || "") + '</div><span class="sample-chip">PÉLDA</span></div>' +
+        '<div class="bot-name' + (String(b.name || b.id || "").length > 14 ? " long" : "") + '">' + esc(b.name || b.id || "Bot") + "</div>" +
+        (b.value != null && b.value !== "" ? '<div class="bot-value">' + esc(b.value) + "</div>" : "") +
+        '<div class="bot-line">' + esc(b.line || "") + "</div>" +
+        '<div class="bot-foot"><span class="dot"></span><span class="st">' + esc(b.status_text || STATUS_LABEL[st]) + "</span>" +
+        (upd && !isNaN(upd) ? "<span>· " + esc(ago(upd)) + "</span>" : "") + '</div>' +
+        "</article>";
+    }).join("");
+    html += jarvisCardHtml();
+    $("bots").innerHTML = html;
+    bindJarvis();
+  }
+
+  function jarvisCardHtml() {
+    var s = settings();
+    var srcText, srcCls = state.source;
+    var upd = state.data && state.data.updated ? new Date(state.data.updated) : state.fetchedAt;
+    if (state.source === "sample") srcText = "Példa adatok";
+    else if (state.source === "stale") srcText = "Offline · utolsó: " + (state.fetchedAt ? hhmm(state.fetchedAt) : "");
+    else srcText = "Élő adatok · " + (upd && !isNaN(upd) ? ago(upd) : "");
+    var auto = autoHtml(s);
+    var needTap = s.autoRead && s.autoRead.enabled && !window.fully && navigator.userActivation && !navigator.userActivation.hasBeenActive;
+    return '<article class="card jarvis">' +
+      '<div class="card-head"><div class="orb"></div><div class="grow" style="min-width:0"><div class="bot-name">Jarvis</div></div>' +
+      '<button class="icon-btn" id="btnSettings" aria-label="Beállítások">' + svg("sliders") + "</button></div>" +
+      '<button class="speak-btn" id="btnSpeak">' + (speech.active ? svg("stop") + "<span>Leállítás</span>" : svg("speaker") + "<span>Felolvasás</span>") + "</button>" +
+      '<div class="j-meta' + (state.source === "stale" ? " err" : "") + '" title="' + esc(state.lastError) + '"><span class="src-dot ' + srcCls + '"></span>' + esc(srcText) + "</div>" +
+      (needTap ? '<div class="j-meta warn">Koppints egyszer az auto felolvasáshoz!</div>' : '<div class="j-meta">' + auto + "</div>") +
+      "</article>";
+  }
+  function autoHtml(s) {
+    return s.autoRead && s.autoRead.enabled
+      ? 'Auto: <b>' + esc(s.autoRead.morning || "–") + "</b> · <b>" + esc(s.autoRead.evening || "–") + "</b>"
+      : "Auto felolvasás: <b>ki</b>";
+  }
+  function bindJarvis() {
+    $("btnSpeak").onclick = function () {
+      if (speech.active) speech.stop(); else speech.say(buildSpeech(isMorningHalf(bpNow().h) ? "morning" : "evening"), false);
+    };
+    $("btnSettings").onclick = openSettings;
+  }
+
+  function todoItems() {
+    var list = state.data && Array.isArray(state.data.todos) ? state.data.todos.slice() : [];
+    return list.filter(function (t) { return t && (t.text || t.title); }).sort(function (a, b) {
+      if (!!a.done !== !!b.done) return a.done ? 1 : -1;
+      var ta = parseHM(a.time), tb = parseHM(b.time);
+      if (ta == null && tb == null) return 0;
+      if (ta == null) return 1;
+      if (tb == null) return -1;
+      return ta - tb;
+    });
+  }
+
+  function renderTodos(n) {
+    var items = todoItems();
+    var nowMin = n.h * 60 + n.mi;
+    var nextIdx = -1;
+    items.forEach(function (t, i) {
+      var tm = parseHM(t.time);
+      if (nextIdx < 0 && !t.done && tm != null && tm >= nowMin) nextIdx = i;
+    });
+    var open = items.filter(function (t) { return !t.done; }).length;
+    $("todoCount").innerHTML = open + '<span class="w"> nyitott</span>';
+    var ul = $("todoList");
+    if (!items.length) {
+      ul.innerHTML = '<li class="empty">Mára nincs teendő. 🎉</li>';
+      return;
+    }
+    ul.innerHTML = items.map(function (t, i) {
+      var cls = ["todo"];
+      if (t.done) cls.push("done");
+      if (t.priority === "high") cls.push("high");
+      if (t.kind === "reminder") cls.push("reminder");
+      if (i === nextIdx) cls.push("next");
+      var mark = t.kind === "reminder" ? svg("bell") : svg("check");
+      return '<li class="' + cls.join(" ") + '"><span class="chk">' + mark + "</span>" +
+        '<div class="todo-body">' + (t.time ? '<div class="todo-time">' + esc(t.time) + (i === nextIdx ? '<span class="tag">KÖVETKEZŐ</span>' : "") + "</div>" : "") +
+        '<div class="todo-text">' + esc(t.text || t.title) + "</div></div></li>";
+    }).join("") + '<li class="todo-more" id="todoMore" style="display:none"></li>';
+
+    // Ami nem fér ki, azt elrejtjük és „+N további” sort mutatunk
+    var lis = ul.querySelectorAll(".todo");
+    var more = $("todoMore");
+    var hidden = 0;
+    for (var i = lis.length - 1; i > 0 && ul.scrollHeight > ul.clientHeight + 1; i--) {
+      lis[i].style.display = "none";
+      hidden++;
+      more.style.display = "";
+      more.textContent = "+" + hidden + " további";
+    }
+  }
+
+  function renderAll() {
+    var n = bpNow();
+    document.body.classList.toggle("sample", state.source === "sample");
+    renderClock(n);
+    renderHeader(n);
+    renderWeather();
+    renderBots();
+    renderTodos(n);
+  }
+
+  /* ================= Felolvasás ================= */
+  function timeWords(min, suffix) {
+    var h = Math.floor(min / 60), m = min % 60;
+    if (suffix) return m ? h + " óra " + m + " perckor" : h + " órakor";
+    return m ? h + " óra " + m + " perc" : h + " óra";
+  }
+  function tempWords(v) {
+    var n = num(v);
+    if (n == null) return null;
+    n = Math.round(n);
+    return (n < 0 ? "mínusz " + (-n) : String(n)) + " fok";
+  }
+  function sentence(s) {
+    s = String(s || "").trim();
+    if (!s) return "";
+    return /[.!?…]$/.test(s) ? s : s + ".";
+  }
+
+  function buildSpeech(slot) {
+    var n = bpNow();
+    var s = settings();
+    var d = state.data || {};
+    var morning = slot === "morning";
+    var out = [];
+    if (state.source === "sample") out.push("Figyelem, a data.json nem érhető el, ezek csak példa adatok.");
+    out.push(greeting(n.h) + ", " + (s.name || "Péter") + "!");
+    out.push("Ma " + n.long.replace(/\.$/, "") + ", " + n.weekday + " van, az idő " + timeWords(n.h * 60 + n.mi) + ".");
+
+    var w = d.weather || {};
+    var t = tempWords(w.temp);
+    if (t) {
+      var txt = wxText(w);
+      var loc = w.location || "Budapest";
+      var where = loc === "Budapest" ? "Budapesten" : loc + " környékén";
+      out.push(where + " jelenleg " + t + " van" + (txt ? ", " + txt.toLowerCase() : "") + ".");
+      if (morning) {
+        var parts = [];
+        if (tempWords(w.high)) parts.push("a csúcshőmérséklet " + tempWords(w.high));
+        if (tempWords(w.low)) parts.push("a minimum " + tempWords(w.low));
+        if (num(w.precip_chance) != null) parts.push("a csapadék esélye " + Math.round(num(w.precip_chance)) + " százalék");
+        if (parts.length) out.push(cap(parts.join(", ")) + ".");
+      } else if (Array.isArray(w.forecast) && w.forecast[0]) {
+        var f = w.forecast[0];
+        var ft = wxText(f);
+        out.push(cap((f.day || "holnap").toLowerCase()) + (ft ? " " + ft.toLowerCase() + "," : "") +
+          (tempWords(f.low) && tempWords(f.high) ? " " + Math.round(num(f.low)) + " és " + Math.round(num(f.high)) + " fok között." : "."));
+      }
+    }
+
+    var b = d.briefing;
+    var bt = typeof b === "string" ? b : (b && (morning ? b.morning : b.evening));
+    if (bt && state.source !== "sample") out.push(sentence(bt));
+
+    var todos = todoItems();
+    var open = todos.filter(function (x) { return !x.done; });
+    var done = todos.length - open.length;
+    if (!todos.length) out.push("Mára nincs felírt teendőd.");
+    else if (morning) {
+      out.push(open.length ? "Mai teendőid, összesen " + open.length + ":" : "Minden mai teendőd kész.");
+      open.forEach(function (x) {
+        var tm = parseHM(x.time);
+        out.push(sentence((tm != null ? timeWords(tm, true) + ": " : "") + (x.text || x.title)));
+      });
+    } else {
+      out.push("Ma " + done + " teendőt végeztél el" + (open.length ? ", " + open.length + " maradt nyitva." : ", minden kész."));
+      open.slice(0, 5).forEach(function (x) { out.push(sentence(x.text || x.title)); });
+    }
+
+    var bots = botList().filter(function (x) { return x.line && x.line !== "Nincs adat"; });
+    if (bots.length) {
+      out.push("A botok jelentései.");
+      bots.forEach(function (x) {
+        var warn = x.status === "error" ? " Hibát jelez." : x.status === "warn" ? " Figyelmet igényel." : "";
+        out.push(sentence((x.name || x.id) + ": " + x.line) + warn);
+      });
+    }
+    out.push(morning ? "Szép napot!" : "Jó pihenést!");
+    return out.join(" ");
+  }
+
+  var speech = {
+    active: false,
+    session: 0,
+    timer: null,
+    hasWS: "speechSynthesis" in window && "SpeechSynthesisUtterance" in window,
+    hasFully: function () { return !!(window.fully && typeof window.fully.textToSpeech === "function"); },
+    voices: function () {
+      return new Promise(function (resolve) {
+        if (!speech.hasWS) return resolve([]);
+        var v = window.speechSynthesis.getVoices();
+        if (v && v.length) return resolve(v);
+        var done = false;
+        var finish = function () { if (done) return; done = true; resolve(window.speechSynthesis.getVoices() || []); };
+        window.speechSynthesis.addEventListener ? window.speechSynthesis.addEventListener("voiceschanged", finish, { once: true }) : (window.speechSynthesis.onvoiceschanged = finish);
+        setTimeout(finish, 1500);
+      });
+    },
+    pickVoice: function (voices) {
+      var want = settings().voice;
+      var v = null;
+      if (want) v = voices.filter(function (x) { return x.name === want; })[0];
+      if (!v) v = voices.filter(function (x) { return /^hu/i.test(x.lang); })[0];
+      return v || null;
+    },
+    setActive: function (on) {
+      speech.active = on;
+      document.body.classList.toggle("speaking", on);
+      var btn = $("btnSpeak");
+      if (btn) btn.innerHTML = on ? svg("stop") + "<span>Leállítás</span>" : svg("speaker") + "<span>Felolvasás</span>";
+    },
+    stop: function () {
+      speech.session++;
+      clearTimeout(speech.timer);
+      if (speech.hasWS) window.speechSynthesis.cancel();
+      if (speech.hasFully() && typeof window.fully.stopTextToSpeech === "function") { try { window.fully.stopTextToSpeech(); } catch (e) {} }
+      speech.setActive(false);
+    },
+    sayFully: function (text) {
+      try { window.fully.textToSpeech(text, "hu_HU"); } catch (e) { window.fully.textToSpeech(text); }
+      speech.setActive(true);
+      var my = speech.session;
+      // A Fully nem jelez, ha végzett – becsült idő után visszaállunk
+      speech.timer = setTimeout(function () { if (my === speech.session) speech.setActive(false); }, Math.min(240000, text.length * 75 + 2000));
+    },
+    say: function (text, auto) {
+      speech.stop();
+      var my = speech.session;
+      return speech.voices().then(function (voices) {
+        if (my !== speech.session) return;
+        if ((!speech.hasWS || !voices.length) && speech.hasFully()) return speech.sayFully(text);
+        if (!speech.hasWS) { toast("Ez a böngésző nem támogatja a felolvasást."); return; }
+        var voice = speech.pickVoice(voices);
+        if (!voice && !auto) toast("Nincs magyar (hu-HU) hang telepítve – az alapértelmezett hangot használom.");
+        // Mondatokra bontva olvassuk fel (a hosszú szöveget néhány böngésző félbevágja)
+        var chunks = text.match(/[^.!?]+[.!?]*/g) || [text];
+        var rate = num(settings().speechRate) || 1;
+        speech.setActive(true);
+        chunks.forEach(function (c, i) {
+          var u = new SpeechSynthesisUtterance(c.trim());
+          u.lang = "hu-HU";
+          if (voice) u.voice = voice;
+          u.rate = rate;
+          if (i === chunks.length - 1) u.onend = function () { if (my === speech.session) speech.setActive(false); };
+          u.onerror = function (e) {
+            if (my !== speech.session) return;
+            if (e.error === "interrupted" || e.error === "canceled") return;
+            speech.session++;
+            window.speechSynthesis.cancel();
+            if (speech.hasFully()) return speech.sayFully(text);
+            speech.setActive(false);
+            if (e.error === "not-allowed") toast("A böngésző letiltotta a hangot – koppints egyszer a képernyőre.");
+            else toast("Felolvasási hiba: " + e.error);
+          };
+          window.speechSynthesis.speak(u);
+        });
+      });
+    }
+  };
+
+  function checkAutoRead(n) {
+    var s = settings();
+    if (!s.autoRead || !s.autoRead.enabled) return;
+    var nowMin = n.h * 60 + n.mi;
+    ["morning", "evening"].forEach(function (slot) {
+      var t = parseHM(s.autoRead[slot]);
+      if (t == null || nowMin < t || nowMin > t + 2) return;
+      var key = "jarvis.autoread." + dayKey(n) + "." + slot;
+      if (state[key] || store(key)) return;
+      state[key] = true;
+      store(key, true);
+      speech.say(buildSpeech(slot), true);
+    });
+  }
+
+  /* ================= Beállítások panel ================= */
+  function openSettings() {
+    var s = settings();
+    $("sEnabled").checked = !!(s.autoRead && s.autoRead.enabled);
+    $("sMorning").value = (s.autoRead && s.autoRead.morning) || "07:30";
+    $("sEvening").value = (s.autoRead && s.autoRead.evening) || "21:30";
+    $("sRate").value = num(s.speechRate) || 1;
+    $("sRateVal").textContent = Number($("sRate").value).toFixed(2);
+    speech.voices().then(function (voices) {
+      var sel = $("sVoice");
+      var hu = voices.filter(function (v) { return /^hu/i.test(v.lang); });
+      var list = hu.length ? hu : voices;
+      sel.innerHTML = '<option value="">Automatikus (magyar)</option>' + list.map(function (v) {
+        return '<option value="' + esc(v.name) + '"' + (v.name === s.voice ? " selected" : "") + ">" + esc(v.name + " (" + v.lang + ")") + "</option>";
+      }).join("");
+      if (!voices.length) sel.innerHTML = '<option value="">' + (speech.hasFully() ? "Android TTS (Fully)" : "Nincs elérhető hang") + "</option>";
+    });
+    $("settings").classList.add("open");
+  }
+  function closeSettings() { $("settings").classList.remove("open"); }
+  function readForm() {
+    return {
+      autoRead: { enabled: $("sEnabled").checked, morning: $("sMorning").value, evening: $("sEvening").value },
+      speechRate: Number($("sRate").value),
+      voice: $("sVoice").value
+    };
+  }
+  $("sRate").oninput = function () { $("sRateVal").textContent = Number(this.value).toFixed(2); };
+  $("sCancel").onclick = closeSettings;
+  $("sSave").onclick = function () { store("jarvis.settings", readForm()); closeSettings(); renderAll(); toast("Beállítások elmentve."); };
+  $("sReset").onclick = function () { store("jarvis.settings", null); closeSettings(); renderAll(); toast("Visszaállítva a data.json beállításaira."); };
+  $("sTest").onclick = function () {
+    var prev = store("jarvis.settings");
+    store("jarvis.settings", readForm());
+    var restore = function () { store("jarvis.settings", prev); };
+    speech.say("Szia " + (settings().name || "Péter") + "! Így hangzik a felolvasás.", false).then(restore, restore);
+  };
+  $("settings").addEventListener("click", function (e) { if (e.target === this) closeSettings(); });
+
+  /* ================= Toast ================= */
+  var toastTimer;
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 5000);
+  }
+
+  /* ================= Beégés elleni eltolás + éjszakai halványítás ================= */
+  function shift() {
+    var rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    var max = rem * 0.55;
+    var dx = Math.round((Math.random() * 2 - 1) * max);
+    var dy = Math.round((Math.random() * 2 - 1) * max);
+    $("app").style.transform = "translate(" + dx + "px," + dy + "px)";
+  }
+  function checkNight(n) {
+    var s = settings();
+    var night = inWindow(n.h * 60 + n.mi, parseHM(s.night && s.night.start), parseHM(s.night && s.night.end));
+    var on = night && Date.now() > state.wakeUntil;
+    document.body.classList.toggle("night", on);
+  }
+  $("night").addEventListener("click", function () {
+    state.wakeUntil = Date.now() + 60000; // koppintásra 1 percre felébred
+    document.body.classList.remove("night");
+  });
+
+  /* ================= Főciklus ================= */
+  function tick() {
+    var n = bpNow();
+    renderClock(n);
+    if (n.mi !== state.lastMinute) {
+      state.lastMinute = n.mi;
+      renderHeader(n);
+      if (state.data) {
+        renderTodos(n);
+        if (n.mi % 5 === 0) { renderWeather(); renderBots(); } // relatív idők frissítése
+      }
+      checkNight(n);
+      checkAutoRead(n);
+    } else if (n.s % 15 === 0) {
+      checkNight(n);
+    }
+    setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
+  }
+
+  document.addEventListener("pointerdown", function () {
+    // első koppintás után eltűnhet a „koppints egyszer” figyelmeztetés (helyben cseréljük,
+    // hogy a koppintott gomb ne cserélődjön ki a kattintás közben)
+    var warn = document.querySelector(".jarvis .j-meta.warn");
+    if (warn) { warn.className = "j-meta"; warn.innerHTML = autoHtml(settings()); }
+  }, { once: true });
+  window.addEventListener("online", load);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+  var resizeTimer;
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { renderTodos(bpNow()); }, 200); });
+
+  tick();
+  load();
+  setInterval(shift, Math.max(1, num(settings().shiftMinutes) || 3) * 60000);
+})();
+</script>
+</body>
+</html>
