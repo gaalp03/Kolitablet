@@ -4,8 +4,8 @@
     "name": "Péter",
     "refreshMinutes": 5,
     "night": {
-      "start": "23:00",
-      "end": "06:00"
+      "start": "22:00",
+      "end": "05:55"
     },
     "shiftMinutes": 3
   },

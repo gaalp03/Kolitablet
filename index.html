@@ -214,9 +214,17 @@
   .empty { color: var(--muted); font-size: 1.2rem; padding: 1rem 0.6rem; }
 
   /* ---------- Éjszakai halványítás ---------- */
-  #night { position: fixed; inset: 0; z-index: 50; background: #000; opacity: 0; pointer-events: none; transition: opacity 30s ease; }
-  body.night #night { opacity: 0.88; pointer-events: auto; }
-  body.night .blob, body.night .orb::before, body.night .orb::after, body.night .dot { animation-play-state: paused; }
+  /* ---------- Éjszakai mód: teljesen fekete, semmi nem látszik és nem animálódik ---------- */
+  #night { display: none; position: fixed; inset: 0; z-index: 50; background: #000; cursor: none; }
+  body.night { background: #000; }
+  body.night #night { display: block; }
+  body.night .bg, body.night #app { display: none; } /* kikerülnek a renderelésből → animáció sincs */
+  #nightClock {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-size: 4rem; font-weight: 300; color: #4a5468; font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+    visibility: hidden;
+  }
+  #nightClock.show { visibility: visible; }
 
   /* Álló tájolás esetére egy egyszerű tartalék */
   @media (orientation: portrait) {
@@ -254,7 +262,7 @@
     </section>
   </main>
 
-  <div id="night" title="Koppints a felébresztéshez"></div>
+  <div id="night"><div id="nightClock"></div></div>
 
 <script>
 (function () {
@@ -266,7 +274,7 @@
   var DEFAULT_SETTINGS = {
     name: "Péter",
     refreshMinutes: 5,
-    night: { start: "23:00", end: "06:00" },
+    night: { start: "22:00", end: "05:55" },
     shiftMinutes: 3
   };
   var DEFAULT_BOTS = [
@@ -402,7 +410,7 @@
     source: "none",      // live | sample | stale
     fetchedAt: null,
     lastError: "",
-    wakeUntil: 0,
+    peekTimer: null,
     lastMinute: -1
   };
 
@@ -700,16 +708,39 @@
   function checkNight(n) {
     var s = settings();
     var night = inWindow(n.h * 60 + n.mi, parseHM(s.night && s.night.start), parseHM(s.night && s.night.end));
-    document.body.classList.toggle("night", night && Date.now() > state.wakeUntil);
+    var was = document.body.classList.contains("night");
+    if (night === was) return;
+    document.body.classList.toggle("night", night);
+    if (!night) {
+      // reggel vissza a normál nézetre, friss adatokkal
+      hidePeek();
+      if (state.data) renderAll();
+      load();
+    }
   }
+  function hidePeek() {
+    clearTimeout(state.peekTimer);
+    $("nightClock").classList.remove("show");
+  }
+  // Éjjel a koppintás nem ébreszt fel: csak 10 másodpercre egy halvány óra jelenik meg
   $("night").addEventListener("click", function () {
-    state.wakeUntil = Date.now() + 60000; // koppintásra 1 percre felébred
-    document.body.classList.remove("night");
+    var n = bpNow();
+    $("nightClock").textContent = pad(n.h) + ":" + pad(n.mi);
+    $("nightClock").classList.add("show");
+    clearTimeout(state.peekTimer);
+    state.peekTimer = setTimeout(hidePeek, 10000);
   });
 
   /* ================= Főciklus ================= */
   function tick() {
     var n = bpNow();
+    checkNight(n);
+    if (document.body.classList.contains("night")) {
+      if ($("nightClock").classList.contains("show")) $("nightClock").textContent = pad(n.h) + ":" + pad(n.mi);
+      state.lastMinute = -1; // reggel azonnal frissüljön minden
+      setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
+      return;
+    }
     renderClock(n);
     if (n.mi !== state.lastMinute) {
       state.lastMinute = n.mi;
@@ -718,9 +749,6 @@
         renderTodos(n);
         if (n.mi % 5 === 0) { renderWeather(); renderBots(n); } // relatív idők, napszak frissítése
       }
-      checkNight(n);
-    } else if (n.s % 15 === 0) {
-      checkNight(n);
     }
     setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
   }

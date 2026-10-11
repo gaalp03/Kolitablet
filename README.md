@@ -1,6 +1,6 @@
 # Kolitablet – Jarvis faliképernyő
 
-Fekvő módú, falra szerelt Android tabletre (Fully Kiosk Browser) készült, egyetlen fájlból álló kijelző. Mutatja a nagy órát, az időjárást, a botok állapotát, a napi összefoglalót és a mai teendőket.
+Fekvő módú, falra szerelt Android tabletre (XGODY Q17, 11", 1280×800, Android 15, Fully Kiosk Browser) készült, egyetlen fájlból álló kijelző. Mutatja a nagy órát, az időjárást, a botok állapotát, a napi összefoglalót és a mai teendőket.
 
 | Fájl | Mire való |
 |---|---|
@@ -17,7 +17,16 @@ cd Kolitablet
 python3 -m http.server 8000
 ```
 
-Utána nyisd meg: <http://localhost:8000>. Tablet-méret: DevTools → eszköz mód, 1280×800 (vagy 1920×1200).
+Utána nyisd meg: <http://localhost:8000>. Tablet-méret: DevTools → eszköz mód, 1280×800.
+
+Az elsődleges méret 1280×800. Mivel az Android eszközönként más device pixel ratiót használhat, a böngésző a kijelzőt kisebb CSS-viewportnak is láthatja. Az oldal ezeken is ellenőrizve van, görgetés és levágott szöveg nélkül:
+
+- **1280×800** (DPR 1)
+- **1067×667** (DPR 1.2)
+- **960×600** (DPR 1.33)
+- **1280×752** (látható navigációs sávval)
+
+Minden méret egy közös alapegységből (`rem`) skálázódik, így az arányok mindenhol ugyanazok.
 
 Ha az `index.html`-t simán duplakattal nyitod meg, a beépített mintaadatot látod, a köszönés mellett sárga **PÉLDA ADATOK** jelvénnyel. Ugyanez történik, ha a `data.json` hiányzik vagy hibás.
 
@@ -35,6 +44,16 @@ A tabletről: `http://<szerver-tailscale-neve>:8080/`. Hosszú távra egy system
 - **Start URL:** a fenti cím.
 - **Képernyő:** *Device Management → Keep Screen On*.
 - **Teljes képernyő:** *Web Content Settings → Hide Status/Navigation Bar*.
+- **Szövegnagyítás:** a *Web Zoom / Text Zoom* maradjon 100%-on, különben a szövegek nem férnek ki.
+
+### Éjszakai háttérvilágítás (a tableten kell beállítani)
+
+Az oldal 22:00 és 05:55 között teljesen fekete, de egy IPS kijelző háttérvilágítása ettől még ég. Ha a tablet képernyőjét is ki akarod kapcsolni ugyanebben az időszakban, azt a **Fully Kiosk beállításaiban** kell megadni, nem a weboldalon:
+
+- **Device Management → Screen Off Timer / Schedule Screen Off:** kikapcsolás 22:00-kor.
+- **Device Management → Schedule Wakeup (Screen On):** bekapcsolás 05:55-kor.
+- A pontos menünevek Fully-verziónként kicsit eltérhetnek. Az ütemezett ki/bekapcsoláshoz általában a Fully PLUS licenc és a *Device Admin* jogosultság kell.
+- A tablet órája legyen Europe/Budapest időzónán, mert a Fully ütemezése a készülék idejét használja. Az oldal viszont mindig budapesti időt számol.
 
 ## Elrendezés
 
@@ -53,7 +72,7 @@ A tabletről: `http://<szerver-tailscale-neve>:8080/`. Hosszú távra egy system
   - ha korábban már bejött, az utolsó valódi adat marad kint, a Jarvis kártyán „Offline · utolsó: hh:mm” felirattal;
   - ha az `updated` 12 óránál régebbi, a kártyán „Régi adat” jelenik meg.
 - **Beégés elleni védelem:** az egész elrendezés 3 percenként néhány pixelt elmozdul (`settings.shiftMinutes`).
-- **Éjszaka:** 23:00 és 6:00 között a kijelző elhalványul (`settings.night`). Koppintásra 1 percre felébred.
+- **Éjszaka:** 22:00 és 05:55 között (budapesti idő, `settings.night`) a kijelző teljesen fekete. Ilyenkor semmi nem látszik, és semmi sem animálódik (a háttér és a tartalom ki is kerül a renderelésből). 05:55-kor magától visszajön a normál nézet, friss adatokkal. Koppintásra nem ébred fel, csak 10 másodpercre megjelenik középen egy halvány óra.
 - **Levágás elleni védelem:** ha egy szöveg valamiért nem fér ki (pl. más betűtípus miatt), az oldal kevesebb, de egész sort mutat „…”-tal.
 
 ## A `data.json` felépítése
@@ -68,7 +87,7 @@ Minden mező opcionális; ami hiányzik, arra az oldal alapértéket használ.
   "settings": {
     "name": "Péter",                         // a köszönésben
     "refreshMinutes": 5,                     // data.json újratöltési gyakoriság
-    "night": { "start": "23:00", "end": "06:00" },
+    "night": { "start": "22:00", "end": "05:55" },  // teljesen fekete kijelző ebben a sávban
     "shiftMinutes": 3                        // beégés elleni eltolás gyakorisága
   },
 
