@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T21:04:36+02:00",
+  "updated": "2026-10-12T05:33:09+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -11,38 +11,38 @@
     "shiftMinutes": 3
   },
   "briefing": {
-    "morning": "17 fok, részben felhős. Holnap 2 dolgozat.",
-    "evening": "Száraz este. Holnap hangkultúra és magyar dolgozat."
+    "morning": "12 fok, felhős. Ma magyar röpi és hangkultúra témazáró, sok sikert!",
+    "evening": "Száraz este. Holnap töri röpi az Árpád-házi királyokból."
   },
   "weather": {
     "location": "Budapest",
-    "temp": 17,
-    "feels_like": 15,
-    "condition": "Részben felhős",
-    "icon": "partly",
-    "code": 2,
+    "temp": 12,
+    "feels_like": 9,
+    "condition": "Felhős",
+    "icon": "cloud",
+    "code": 3,
     "high": 17,
-    "low": 13,
-    "precip_chance": 0,
-    "wind_kmh": 9,
+    "low": 12,
+    "precip_chance": 2,
+    "wind_kmh": 12,
     "forecast": [
       {
         "day": "Holnap",
-        "icon": "cloud",
-        "high": 16,
-        "low": 12
-      },
-      {
-        "day": "Kedd",
         "icon": "sun",
         "high": 17,
         "low": 9
       },
       {
         "day": "Szerda",
-        "icon": "rain",
-        "high": 14,
-        "low": 5
+        "icon": "cloud",
+        "high": 15,
+        "low": 8
+      },
+      {
+        "day": "Csütörtök",
+        "icon": "cloud",
+        "high": 16,
+        "low": 6
       }
     ]
   },
@@ -55,7 +55,7 @@
       "status": "ok",
       "value": "Élő",
       "line": "A kijelző reggel és este frissül.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "tippmix",
@@ -65,7 +65,7 @@
       "status": "info",
       "value": "0 tipp",
       "line": "Keddig nincs biztos meccs, nem fogadunk.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "crazygames",
@@ -74,8 +74,8 @@
       "icon": "games",
       "status": "warn",
       "value": "5/15",
-      "line": "Mindkét játék pontszáma 5/15, 9 kellene.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "line": "Új verziók élesben, holnap jön a hatásuk.",
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "promo",
@@ -84,8 +84,8 @@
       "icon": "promo",
       "status": "idle",
       "value": "–",
-      "line": "Szünetel, amíg ki nem jön a javított játék.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "line": "A promó a javított játékig szünetel.",
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "tanulas",
@@ -94,8 +94,8 @@
       "icon": "learn",
       "status": "warn",
       "value": "2",
-      "line": "Holnap hangkultúra és magyar dolgozat.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "line": "Ma magyar röpi és hangkultúra témazáró.",
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "eladas",
@@ -103,9 +103,9 @@
       "subtitle": "Hirdetések",
       "icon": "sell",
       "status": "ok",
-      "value": "3",
-      "line": "3 hirdetés fent, nincs új infó.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "value": "3 db",
+      "line": "Kamera, varrógép és nyomtató eladó.",
+      "updated": "2026-10-12T05:33:09+02:00"
     },
     {
       "id": "vasarlas",
@@ -114,18 +114,24 @@
       "icon": "buy",
       "status": "ok",
       "value": "–",
-      "line": "Nincs rendelés, semmi új infó.",
-      "updated": "2026-10-11T21:04:36+02:00"
+      "line": "Ma indul a Lidl réteslap-akció, szerdáig.",
+      "updated": "2026-10-12T05:33:09+02:00"
     }
   ],
   "todos": [
     {
+      "time": "1. óra",
+      "text": "Magyar röpi: Janus, Balassi",
+      "priority": "high"
+    },
+    {
+      "time": "3. óra",
       "text": "Hangkultúra témazáró",
       "priority": "high"
     },
     {
-      "text": "Magyar röpi: Janus, Balassi",
-      "priority": "high"
+      "time": "Este",
+      "text": "Töri röpire készülés (kedd)"
     }
   ]
 }
