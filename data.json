@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T18:05:00+02:00",
+  "updated": "2026-10-13T05:40:00+02:00",
   "example": false,
   "settings": {
     "name": "Péter",
@@ -11,38 +11,38 @@
     "shiftMinutes": 3
   },
   "briefing": {
-    "morning": "12 fok, felhős. Ma magyar röpi és hangkultúra témazáró, sok sikert!",
-    "evening": "Derült, száraz este. Ma töri ismétlés a holnapi röpire!"
+    "morning": "9 fok, napos idő. Ma töri röpi, sok sikert!",
+    "evening": "Este matek ismétlés a holnapi röpire."
   },
   "weather": {
     "location": "Budapest",
-    "temp": 15,
-    "feels_like": 13,
+    "temp": 9,
+    "feels_like": 6,
     "condition": "Derült",
     "icon": "sun",
     "code": 0,
-    "high": 16,
-    "low": 11,
+    "high": 17,
+    "low": 8,
     "precip_chance": 0,
-    "wind_kmh": 10,
+    "wind_kmh": 3,
     "forecast": [
       {
         "day": "Holnap",
-        "icon": "sun",
-        "high": 16,
-        "low": 8
-      },
-      {
-        "day": "Szerda",
         "icon": "cloud",
-        "high": 17,
+        "high": 14,
         "low": 8
       },
       {
         "day": "Csütörtök",
         "icon": "cloud",
-        "high": 15,
+        "high": 16,
         "low": 8
+      },
+      {
+        "day": "Péntek",
+        "icon": "sun",
+        "high": 15,
+        "low": 5
       }
     ]
   },
@@ -55,7 +55,7 @@
       "status": "ok",
       "value": "Élő",
       "line": "A kijelző reggel és este frissül.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "tippmix",
@@ -64,8 +64,8 @@
       "icon": "tippmix",
       "status": "info",
       "value": "0 tipp",
-      "line": "Keddig nincs biztos meccs, nem fogadunk.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "line": "Nincs új elemzés, ma reggel jön a következő.",
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "crazygames",
@@ -74,8 +74,8 @@
       "icon": "games",
       "status": "warn",
       "value": "5/15",
-      "line": "A játékok még tesztben, javulásra várunk.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "line": "Ma telik le a teszt első hete, figyelünk.",
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "promo",
@@ -85,7 +85,7 @@
       "status": "idle",
       "value": "Szünet",
       "line": "A játékok hirdetése szünetel a javításig.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "tanulas",
@@ -94,8 +94,8 @@
       "icon": "learn",
       "status": "warn",
       "value": "TÖRI",
-      "line": "Ma este töri, holnap röpi és matek.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "line": "Ma töri röpi, este matek ismétlés.",
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "eladas",
@@ -105,7 +105,7 @@
       "status": "ok",
       "value": "1 vevő",
       "line": "Egy vevőre várunk, pénteken feladás.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "updated": "2026-10-13T05:40:00+02:00"
     },
     {
       "id": "vasarlas",
@@ -113,24 +113,24 @@
       "subtitle": "Figyelt termékek",
       "icon": "buy",
       "status": "ok",
-      "value": "Szerda",
-      "line": "Megvannak a szerdai mozi időpontjai.",
-      "updated": "2026-10-12T18:05:00+02:00"
+      "value": "Holnap",
+      "line": "Holnap mozi, a jegylinkek készen vannak.",
+      "updated": "2026-10-13T05:40:00+02:00"
     }
   ],
   "todos": [
     {
-      "time": "Ma este",
-      "text": "Töri ismétlés a röpire",
+      "time": "Ma",
+      "text": "Töri röpi",
       "priority": "high"
     },
     {
-      "time": "Kedd",
-      "text": "Töri röpi"
+      "time": "Este",
+      "text": "Matek: egyenletrendszerek"
     },
     {
-      "time": "Kedd este",
-      "text": "Matek: egyenletrendszerek"
+      "time": "Szerda",
+      "text": "Matek röpi"
     }
   ]
 }
