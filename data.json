@@ -8,6 +8,10 @@
       "start": "22:00",
       "end": "05:55"
     },
+    "crazygames": {
+      "start": "06:00",
+      "end": "08:00"
+    },
     "shiftMinutes": 3
   },
   "briefing": {

@@ -5,7 +5,8 @@ Fekvő módú, falra szerelt Android tabletre (XGODY Q17, 11", 1280×800, Androi
 | Fájl | Mire való |
 |---|---|
 | `index.html` | Maga az oldal. A CSS, a JS és az SVG ikonok mind benne vannak, külső függőség nincs, offline is ugyanígy néz ki. |
-| `data.json` | Minden változó tartalom. Az oldal 5 percenként újratölti. |
+| `data.json` | Jarvis nézet tartalma (időjárás, botok, teendők, beállítások). Az oldal 5 percenként újratölti. |
+| `crazygames.json` | Reggeli CrazyGames játékstatisztika. Ugyanúgy 5 percenként töltődik, CrazyGames login/API nélkül. |
 | `README.md` | Ez a leírás. |
 
 ## Kipróbálás
@@ -17,7 +18,9 @@ cd Kolitablet
 python3 -m http.server 8000
 ```
 
-Utána nyisd meg: <http://localhost:8000>. Tablet-méret: DevTools → eszköz mód, 1280×800.
+Utána nyisd meg: <http://localhost:8000>. A reggeli CrazyGames nézet bármikor kipróbálható: <http://localhost:8000/?crazy=1> (éjszakát is megkerüli). Tablet-méret: DevTools → eszköz mód, 1280×800.
+
+Élő GitHub Pages: <https://gaalp03.github.io/Kolitablet/> · teszt: <https://gaalp03.github.io/Kolitablet/?crazy=1>
 
 Az elsődleges méret 1280×800. Mivel az Android eszközönként más device pixel ratiót használhat, a böngésző a kijelzőt kisebb CSS-viewportnak is láthatja. Az oldal ezeken is ellenőrizve van, görgetés és levágott szöveg nélkül:
 
@@ -73,6 +76,7 @@ Az oldal 22:00 és 05:55 között teljesen fekete, de egy IPS kijelző háttérv
   - ha az `updated` 12 óránál régebbi, a kártyán „Régi adat” jelenik meg.
 - **Beégés elleni védelem:** az egész elrendezés 3 percenként néhány pixelt elmozdul (`settings.shiftMinutes`).
 - **Éjszaka:** 22:00 és 05:55 között (budapesti idő, `settings.night`) a kijelző teljesen fekete. Ilyenkor semmi nem látszik, és semmi sem animálódik (a háttér és a tartalom ki is kerül a renderelésből). 05:55-kor magától visszajön a normál nézet, friss adatokkal. Koppintásra nem ébred fel, csak 10 másodpercre megjelenik középen egy halvány óra.
+- **Reggeli CrazyGames:** 06:00–08:00 között (budapesti idő, `settings.crazygames`) a Jarvis helyett a játékstatisztika nézet látszik. A `crazygames.json` játékonként mutatja a nevet, státuszt, napi játékosokat, átlagos játékidőt és bevételt; hiányzó mezőnél „Nincs új adat”, üres listánál nagy „Nincs új adat”. Ha `example: true`, sárga **PÉLDA ADATOK** jelvény jelenik meg. Teszteléshez: `?crazy=1` (éjszakát is megkerüli).
 - **Levágás elleni védelem:** ha egy szöveg valamiért nem fér ki (pl. más betűtípus miatt), az oldal kevesebb, de egész sort mutat „…”-tal.
 
 ## A `data.json` felépítése
@@ -88,6 +92,7 @@ Minden mező opcionális; ami hiányzik, arra az oldal alapértéket használ.
     "name": "Péter",                         // a köszönésben
     "refreshMinutes": 5,                     // data.json újratöltési gyakoriság
     "night": { "start": "22:00", "end": "05:55" },  // teljesen fekete kijelző ebben a sávban
+    "crazygames": { "start": "06:00", "end": "08:00" }, // reggeli CrazyGames nézet
     "shiftMinutes": 3                        // beégés elleni eltolás gyakorisága
   },
 
@@ -136,3 +141,25 @@ Minden mező opcionális; ami hiányzik, arra az oldal alapértéket használ.
 A teendők sorrendje: előbb a nyitottak időrendben, aztán a kész tételek. Ami nem fér ki, az helyett „+N további” sor jelenik meg. 7-nél több bot esetén a kártyák kisebbek lesznek, és kevesebb sor fér ki belőlük.
 
 A botjaid egyszerűen felülírhatják a `data.json` megfelelő részét (pl. `jq`-val vagy egy kis Python scripttel). Az oldal a következő frissítéskor magától átveszi a változást.
+
+## A `crazygames.json` felépítése
+
+Nincs CrazyGames login vagy API hívás – egy bot / script írja a fájlt a szerverre vagy a Pages repo-ba.
+
+```jsonc
+{
+  "updated": "2026-11-18T06:15:00+01:00",
+  "example": true,                 // true → „PÉLDA ADATOK” jelvény
+  "games": [
+    {
+      "name": "Példa Puzzle Rush",
+      "status": "Live",            // hiányzik → „Nincs új adat”
+      "dailyPlayers": 12480,       // hiányzik / null → „Nincs új adat”
+      "avgPlaytimeSec": 420,       // másodperc; hiányzik → „Nincs új adat”
+      "revenue": 38.5              // euró; hiányzik / null → „Nincs új adat”
+    }
+  ]
+}
+```
+
+Üres vagy hiányzó `games` lista esetén a nézet nagy „Nincs új adat” feliratot mutat.

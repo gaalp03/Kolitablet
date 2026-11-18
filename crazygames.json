@@ -1,0 +1,41 @@
+{
+  "updated": "2026-11-18T06:15:00+01:00",
+  "example": true,
+  "games": [
+    {
+      "name": "Példa Puzzle Rush",
+      "status": "Live",
+      "dailyPlayers": 12480,
+      "avgPlaytimeSec": 420,
+      "revenue": 38.5
+    },
+    {
+      "name": "Példa Neon Drift",
+      "status": "Basic Launch",
+      "dailyPlayers": 8620,
+      "avgPlaytimeSec": 305,
+      "revenue": 21.2
+    },
+    {
+      "name": "Példa Tower Defense X",
+      "status": "Live",
+      "dailyPlayers": 15340,
+      "avgPlaytimeSec": 540,
+      "revenue": null
+    },
+    {
+      "name": "Példa Pixel Soccer",
+      "status": "Review",
+      "dailyPlayers": null,
+      "avgPlaytimeSec": 180,
+      "revenue": 4.1
+    },
+    {
+      "name": "Példa Space Miner",
+      "status": "Live",
+      "dailyPlayers": 4210,
+      "avgPlaytimeSec": null,
+      "revenue": 9.75
+    }
+  ]
+}
