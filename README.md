@@ -76,7 +76,7 @@ Az oldal 22:00 és 05:55 között teljesen fekete, de egy IPS kijelző háttérv
   - ha az `updated` 12 óránál régebbi, a kártyán „Régi adat” jelenik meg.
 - **Beégés elleni védelem:** az egész elrendezés 3 percenként néhány pixelt elmozdul (`settings.shiftMinutes`).
 - **Éjszaka:** 22:00 és 05:55 között (budapesti idő, `settings.night`) a kijelző teljesen fekete. Ilyenkor semmi nem látszik, és semmi sem animálódik (a háttér és a tartalom ki is kerül a renderelésből). 05:55-kor magától visszajön a normál nézet, friss adatokkal. Koppintásra nem ébred fel, csak 10 másodpercre megjelenik középen egy halvány óra.
-- **Reggeli CrazyGames:** 06:00–08:00 között (budapesti idő, `settings.crazygames`) a Jarvis helyett a játékstatisztika nézet látszik. A `crazygames.json` játékonként mutatja a nevet, státuszt, napi játékosokat, átlagos játékidőt és bevételt; hiányzó mezőnél „Nincs új adat”, üres listánál nagy „Nincs új adat”. Ha `example: true`, sárga **PÉLDA ADATOK** jelvény jelenik meg. Teszteléshez: `?crazy=1` (éjszakát is megkerüli).
+- **Reggeli CrazyGames:** 06:00–08:00 között (budapesti idő, `settings.crazygames`) a Jarvis helyett egy játék teljes képernyős táblája látszik. Desktop/Mobile Playtime · D1 · Conversion csempék színkódolva (zöld / narancs / piros), alatta szürke cél-sor (`cél: 10:00+`, `cél: 10%+`, `cél: 80%`). Több játéknál 15 másodperces váltás. Hiányzó metrikánál sárga „Nincs adat még”. Ha `example: true`, sárga **PÉLDA ADATOK** jelvény jelenik meg. Teszteléshez: `?crazy=1` (éjszakát is megkerüli).
 - **Levágás elleni védelem:** ha egy szöveg valamiért nem fér ki (pl. más betűtípus miatt), az oldal kevesebb, de egész sort mutat „…”-tal.
 
 ## A `data.json` felépítése
@@ -148,18 +148,30 @@ Nincs CrazyGames login vagy API hívás – egy bot / script írja a fájlt a sz
 
 ```jsonc
 {
-  "updated": "2026-11-18T06:15:00+01:00",
+  "updated": "2026-11-18T22:00:00+01:00",
   "example": true,                 // true → „PÉLDA ADATOK” jelvény
   "games": [
     {
-      "name": "Példa Puzzle Rush",
-      "status": "Live",            // hiányzik → „Nincs új adat”
-      "dailyPlayers": 12480,       // hiányzik / null → „Nincs új adat”
-      "avgPlaytimeSec": 420,       // másodperc; hiányzik → „Nincs új adat”
-      "revenue": 38.5              // euró; hiányzik / null → „Nincs új adat”
+      "name": "Safe House",
+      "metrics": {
+        "desktop": { "playtimeSec": 720, "d1Pct": 12.5, "conversionPct": 85 },
+        "mobile":  { "playtimeSec": 480, "d1Pct": 6.2,  "conversionPct": 55 }
+      },
+      "extra": {
+        "plays": 1840,
+        "ctrPct": 3.2,
+        "revenueEur": 12.4,
+        "rating": 10,              // nagy „★ 10,0”
+        "ratingCount": 1,          // alatta szürke „1 értékelés”
+        "stage": "Basic Launch",
+        "launchStart": "2026-11-17",
+        "launchEnd": "2026-11-25",
+        "scoreDesktop": 72,
+        "scoreMobile": 58
+      }
     }
   ]
 }
 ```
 
-Üres vagy hiányzó `games` lista esetén a nézet nagy „Nincs új adat” feliratot mutat.
+Színkód a 6 metrika-csempén: playtime ≥600s / D1 ≥10% / conversion ≥80% → zöld; playtime <300s / D1 <4% / conversion <60% → piros; egyébként narancs; hiányzó → sárga „Nincs adat még”. Üres `games` listánál nagy „Nincs adat még”.

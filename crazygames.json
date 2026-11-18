@@ -1,41 +1,33 @@
 {
-  "updated": "2026-11-18T06:15:00+01:00",
+  "updated": "2026-11-18T22:00:00+01:00",
   "example": true,
   "games": [
     {
-      "name": "Példa Puzzle Rush",
-      "status": "Live",
-      "dailyPlayers": 12480,
-      "avgPlaytimeSec": 420,
-      "revenue": 38.5
-    },
-    {
-      "name": "Példa Neon Drift",
-      "status": "Basic Launch",
-      "dailyPlayers": 8620,
-      "avgPlaytimeSec": 305,
-      "revenue": 21.2
-    },
-    {
-      "name": "Példa Tower Defense X",
-      "status": "Live",
-      "dailyPlayers": 15340,
-      "avgPlaytimeSec": 540,
-      "revenue": null
-    },
-    {
-      "name": "Példa Pixel Soccer",
-      "status": "Review",
-      "dailyPlayers": null,
-      "avgPlaytimeSec": 180,
-      "revenue": 4.1
-    },
-    {
-      "name": "Példa Space Miner",
-      "status": "Live",
-      "dailyPlayers": 4210,
-      "avgPlaytimeSec": null,
-      "revenue": 9.75
+      "name": "Safe House",
+      "metrics": {
+        "desktop": {
+          "playtimeSec": 720,
+          "d1Pct": 12.5,
+          "conversionPct": 85
+        },
+        "mobile": {
+          "playtimeSec": 480,
+          "d1Pct": 6.2,
+          "conversionPct": 55
+        }
+      },
+      "extra": {
+        "plays": 1840,
+        "ctrPct": 3.2,
+        "revenueEur": 12.4,
+        "rating": 10,
+        "ratingCount": 1,
+        "stage": "Basic Launch",
+        "launchStart": "2026-11-17",
+        "launchEnd": "2026-11-25",
+        "scoreDesktop": 72,
+        "scoreMobile": 58
+      }
     }
   ]
 }
