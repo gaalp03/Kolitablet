@@ -228,105 +228,115 @@
   /* ---------- Reggeli CrazyGames nézet (egy játék / teljes képernyő) ---------- */
   #crazy {
     display: none; position: fixed; inset: 0; z-index: 2;
-    padding: 0.9rem 1.4rem 1.1rem; flex-direction: column; gap: 0.7rem; min-height: 0;
+    padding: 0.65rem 1.15rem 0.7rem; flex-direction: column; gap: 0.45rem; min-height: 0;
     transition: transform 8s ease-in-out;
   }
   body.crazy #app { display: none; }
   body.crazy #crazy { display: flex; }
   .cg-head {
-    display: flex; align-items: flex-end; gap: 1.2rem; flex: none; min-width: 0;
+    display: flex; align-items: flex-end; gap: 1rem; flex: 0 0 auto; min-width: 0;
   }
   .cg-brand { min-width: 0; flex: 1; }
   .cg-title {
-    font-size: 2.2rem; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+    font-size: 1.15rem; font-weight: 800; line-height: 1.05; letter-spacing: 0.08em; text-transform: uppercase;
     background: linear-gradient(90deg, #fff 20%, #5eead4 90%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .cg-game-name {
-    margin-top: 0.25rem; font-size: 2.8rem; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+    margin-top: 0.1rem; font-size: 2.35rem; font-weight: 800; line-height: 1.02; letter-spacing: -0.02em;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .cg-clock { flex: none; text-align: right; font-variant-numeric: tabular-nums; }
-  .cg-time { font-size: 3.2rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+  .cg-time { font-size: 2.55rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
   .cg-time .sec { font-size: 0.4em; font-weight: 400; color: var(--muted); margin-left: 0.35rem; }
-  .cg-date { font-size: 1.05rem; color: var(--soft); margin-top: 0.2rem; }
+  .cg-date { font-size: 0.95rem; color: var(--soft); margin-top: 0.1rem; }
   .cg-meta {
-    display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem 0.9rem; flex: none; min-width: 0;
-    font-size: 1rem; color: var(--muted);
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem 0.75rem; flex: 0 0 auto; min-width: 0;
+    font-size: 0.95rem; color: var(--muted);
   }
   .cg-meta .badge { margin-left: 0; }
   .cg-chip {
     display: inline-flex; align-items: center; gap: 0.35rem;
-    padding: 0.2rem 0.55rem; border-radius: 0.45rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 0.18rem 0.5rem; border-radius: 0.45rem; font-weight: 700; letter-spacing: 0.04em;
     background: rgba(94, 234, 212, 0.12); border: 1px solid rgba(94, 234, 212, 0.28); color: var(--accent);
-    text-transform: uppercase; font-size: 0.85rem;
+    text-transform: uppercase; font-size: 0.8rem;
   }
   .cg-chip.soft { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: var(--soft); text-transform: none; letter-spacing: 0; font-weight: 600; }
+  /* platforms ~70% magasság, alsó sáv kompakt ~18–20% */
   .cg-board {
-    flex: 1; min-height: 0; display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto; gap: 0.75rem;
+    flex: 1 1 auto; min-height: 0;
+    display: grid; grid-template-rows: minmax(0, 1fr) 6.2rem; gap: 0.5rem;
   }
   .cg-platforms {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; min-height: 0;
+    min-height: 0; height: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;
   }
   .cg-platform {
-    min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 0.5rem;
-    padding: 0.7rem 0.85rem; border-radius: var(--radius);
+    min-width: 0; min-height: 0; height: 100%;
+    display: flex; flex-direction: column; gap: 0.45rem;
+    padding: 0.65rem 0.75rem; border-radius: var(--radius);
     background: linear-gradient(160deg, rgba(94, 234, 212, 0.07), rgba(255, 255, 255, 0.035));
     border: 1px solid rgba(94, 234, 212, 0.16);
   }
   .cg-platform-label {
+    flex: 0 0 auto;
     font-size: 0.95rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
   }
   .cg-tiles {
-    flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem;
+    flex: 1 1 auto; min-height: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 0.5rem;
   }
   .cg-tile {
-    min-width: 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem;
-    padding: 0.55rem 0.6rem; border-radius: 0.85rem;
+    min-width: 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.25rem;
+    padding: 0.65rem 0.7rem; border-radius: 0.85rem;
     background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.06);
   }
   .cg-tile .k {
-    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); font-weight: 700;
+    font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); font-weight: 700;
   }
   .cg-tile .v {
-    font-size: 2.15rem; font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 3.35rem; font-weight: 800; line-height: 0.98; font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .cg-tile .v.good { color: var(--ok); }
   .cg-tile .v.bad { color: var(--err); }
   .cg-tile .v.mid { color: #fb923c; }
-  .cg-tile .v.miss { color: var(--warn); font-size: 1.25rem; font-weight: 700; }
+  .cg-tile .v.miss { color: var(--warn); font-size: 1.55rem; font-weight: 700; letter-spacing: 0; }
   .cg-tile .cel {
-    font-size: 0.92rem; color: var(--dim); font-weight: 600; letter-spacing: 0.01em;
+    font-size: 0.98rem; color: var(--dim); font-weight: 600; letter-spacing: 0.01em;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .cg-extra {
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.55rem; flex: none;
+    height: 100%; min-height: 0; max-height: 6.2rem; box-sizing: border-box;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.45rem; align-items: stretch;
   }
   .cg-extra-item {
-    min-width: 0; padding: 0.55rem 0.65rem; border-radius: 0.85rem;
+    min-width: 0; min-height: 0; height: 100%; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0.25rem 0.55rem; border-radius: 0.7rem;
     background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow: hidden;
   }
   .cg-extra-item .k {
-    display: block; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--dim); font-weight: 700; margin-bottom: 0.15rem;
+    display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--dim); font-weight: 700; margin-bottom: 0.08rem;
   }
   .cg-extra-item .v {
     display: block; font-size: 1.35rem; font-weight: 700; line-height: 1.1;
     font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .cg-extra-item .v.miss { color: var(--warn); font-size: 1.05rem; font-weight: 600; }
+  .cg-extra-item .v.miss { color: var(--warn); font-size: 1rem; font-weight: 600; }
   .cg-extra-item .sub {
-    display: block; margin-top: 0.12rem; font-size: 0.95rem; color: var(--dim); font-weight: 600;
+    display: block; margin-top: 0.08rem; font-size: 0.85rem; color: var(--dim); font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .cg-rating .v { font-size: 1.7rem; }
+  .cg-rating .v { font-size: 1.45rem; }
   .cg-dots {
-    display: none; justify-content: center; gap: 0.45rem; flex: none; padding-top: 0.1rem;
+    display: none; justify-content: center; gap: 0.45rem; flex: 0 0 auto; padding-top: 0.05rem;
   }
   .cg-dots.on { display: flex; }
   .cg-dot {
-    width: 0.55rem; height: 0.55rem; border-radius: 50%; background: rgba(255,255,255,0.18);
+    width: 0.5rem; height: 0.5rem; border-radius: 50%; background: rgba(255,255,255,0.18);
   }
   .cg-dot.on { background: var(--accent); box-shadow: 0 0 0.5rem rgba(94, 234, 212, 0.45); }
   .cg-empty {
@@ -347,9 +357,10 @@
     .bots { grid-column: 1 / span 2; grid-row: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .todos { grid-column: 1 / span 2; grid-row: 4; max-height: 30vh; }
     .cg-platforms { grid-template-columns: 1fr; }
-    .cg-extra { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .cg-game-name { font-size: 2.1rem; }
-    .cg-tile .v { font-size: 1.7rem; }
+    .cg-board { grid-template-rows: minmax(0, 1fr) auto; }
+    .cg-extra { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; height: auto; }
+    .cg-game-name { font-size: 2rem; }
+    .cg-tile .v { font-size: 2.4rem; }
     .cg-empty-text { font-size: 2.2rem; }
   }
 </style>
@@ -924,7 +935,7 @@
     if (n == null) return null;
     n = Math.max(0, Math.round(n));
     var m = Math.floor(n / 60), s = n % 60;
-    return pad(m) + ":" + pad(s);
+    return m + ":" + pad(s);
   }
   function fmtPct(v, digits) {
     var n = num(v);
