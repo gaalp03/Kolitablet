@@ -1,32 +1,31 @@
 {
-  "updated": "2026-11-18T22:00:00+01:00",
-  "example": true,
+  "updated": "2026-11-19T06:37:00Z",
   "games": [
     {
       "name": "Safe House",
       "metrics": {
         "desktop": {
-          "playtimeSec": 720,
-          "d1Pct": 12.5,
-          "conversionPct": 85
+          "playtimeSec": 270,
+          "d1Pct": 2.17,
+          "conversionPct": 56.55
         },
         "mobile": {
-          "playtimeSec": 480,
-          "d1Pct": 6.2,
-          "conversionPct": 55
+          "playtimeSec": 243,
+          "d1Pct": 5.41,
+          "conversionPct": 46.38
         }
       },
       "extra": {
-        "plays": 1840,
-        "ctrPct": 3.2,
-        "revenueEur": 12.4,
-        "rating": 10,
-        "ratingCount": 1,
+        "plays": 259,
+        "ctrPct": 1.4,
+        "revenueEur": null,
+        "rating": 10.0,
+        "ratingCount": 3,
         "stage": "Basic Launch",
         "launchStart": "2026-11-17",
-        "launchEnd": "2026-11-25",
-        "scoreDesktop": 72,
-        "scoreMobile": 58
+        "launchEnd": "2026-12-08",
+        "scoreDesktop": null,
+        "scoreMobile": null
       }
     }
   ]
